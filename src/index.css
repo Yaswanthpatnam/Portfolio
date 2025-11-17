@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sansation:wght@700&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --bg-primary: #050505;
+  --bg-secondary: #0f0f10;
+  --text-primary: #ffffff;
+  --text-muted: #d7d7da;
+  --panel-bg: rgba(255, 255, 255, 0.04);
+  --panel-border: rgba(255, 255, 255, 0.5);
+  --pill-bg: rgba(255, 255, 255, 0.05);
+  --card-bg: rgba(40, 40, 41, 0.75);
+  --accent: #c8bd56;
+}
+
+[data-theme='light'] {
+  --bg-primary: #f3f4f6;
+  --bg-secondary: #ffffff;
+  --text-primary: #111111;
+  --text-muted: #3a3a3a;
+  --panel-bg: rgba(0, 0, 0, 0.03);
+  --panel-border: rgba(0, 0, 0, 0.3);
+  --pill-bg: rgba(0, 0, 0, 0.05);
+  --card-bg: rgba(255, 255, 255, 0.85);
+}
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  body {
+    @apply m-0 min-h-screen transition-colors duration-500;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Albert Sans', sans-serif;
+  }
+
+  #root {
+    @apply min-h-screen;
+    background: var(--bg-primary);
+  }
+}
+
+@layer components {
+  .panel {
+    @apply w-full rounded-3xl border backdrop-blur-sm shadow-lg shadow-black/40;
+    background: var(--panel-bg);
+    border-color: var(--panel-border);
+  }
+
+  .pill {
+    @apply relative overflow-hidden rounded-full border px-5 py-2.5 text-center font-semibold tracking-[0.05em] transition;
+    border-color: var(--panel-border);
+    background: var(--pill-bg);
+    color: var(--text-primary);
+  }
+
+  .pill::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -30%;
+    width: 40%;
+    height: 200%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+    transform: rotate(25deg);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.8s ease;
+  }
+
+  .pill:hover::before {
+    opacity: 1;
+    transform: translateX(250%) rotate(25deg);
+  }
+
+  .pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .ghost-btn {
+    @apply inline-flex items-center justify-center rounded-full border px-4 py-1 text-sm font-semibold transition;
+    border-color: var(--panel-border);
+    color: var(--text-primary);
+    background: var(--pill-bg);
+  }
+
+  .ghost-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+}
+
+@layer utilities {
+  .font-sansation {
+    font-family: 'Sansation', sans-serif;
+  }
+
+  .font-albert {
+    font-family: 'Albert Sans', sans-serif;
+  }
+}

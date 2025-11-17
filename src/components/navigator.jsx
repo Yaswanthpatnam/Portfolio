@@ -9,7 +9,7 @@ const socials = [
 const Navigator = () => {
   return (
     <div className="sticky bottom-4 z-30 flex justify-center">
-      <section className="panel w-full max-w-md px-4 py-5 text-center sm:px-6">
+      <section className="panel w-full max-w-xs px-4 py-5 text-center sm:px-6">
         <p className="font-sansation text-xl tracking-[0.1em] text-[color:var(--text-muted)]">
           CONNECT
         </p>

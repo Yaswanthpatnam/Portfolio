@@ -33,7 +33,7 @@ const Header = ({ onToggleTheme, theme }) => {
           </div>
         </div>
 
-        <a
+        <div
           className="ml-3 h-24 w-24 shrink-0 overflow-hidden rounded-full border border-[var(--panel-border)] bg-[var(--pill-bg)] transition hover:scale-105 sm:h-28 sm:w-28 md:h-36 md:w-36 lg:h-40 lg:w-40"
         >
           <img
@@ -44,7 +44,7 @@ const Header = ({ onToggleTheme, theme }) => {
               e.currentTarget.style.display = "none";
             }}
           />
-        </a>
+        </div>
       </div>
     </section>
   );

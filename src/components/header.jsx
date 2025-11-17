@@ -1,5 +1,6 @@
 import React from "react";
-import profile from "/profile.jpg"
+
+
 const Header = ({ onToggleTheme, theme }) => {
   return (
     <section className="panel px-4 py-8 sm:px-8 md:px-10 md:py-12">
@@ -36,7 +37,7 @@ const Header = ({ onToggleTheme, theme }) => {
           className="ml-3 h-24 w-24 shrink-0 overflow-hidden rounded-full border border-[var(--panel-border)] bg-[var(--pill-bg)] transition hover:scale-105 sm:h-28 sm:w-28 md:h-36 md:w-36 lg:h-40 lg:w-40"
         >
           <img
-            src={profile}
+            src="/profile.jpg"
             alt="Yaswanth Babu Patnam"
             className="h-full w-full object-cover"
             onError={(e) => {

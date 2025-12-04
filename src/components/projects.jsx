@@ -5,7 +5,7 @@ const projects = [
     title: "FindIt",
     description:
       "FindIt is a Full Stack Web application where it enables users to search lost belongings and submit found things .It was developed by using Django, Postgres for backend and React.js, Tailwind CSS for frontend. ",
-    stack: ["Django Rest Framework", "PostgreSQL", "React.js", "Tailwind CSS", "JavaScript", "Docker"],
+    stack: ["Django Rest Framework", "PostgreSQL", "React.js", "Tailwind CSS", "JavaScript", "Figma", "Docker"],
     status: "Live",
     statusColor: "#83CE7E",
     github: "https://github.com/Yaswanthpatnam/FindIt",

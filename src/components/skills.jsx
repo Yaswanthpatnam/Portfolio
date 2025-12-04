@@ -13,6 +13,7 @@ const technologies = [
   "Postman",
   "PyCharm",
   "VS Code",
+  "Figma"
 ];
 
 const Skills = () => {

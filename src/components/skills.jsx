@@ -1,6 +1,6 @@
 import React from "react";
 
-const programmingLanguages = ["Python", "JavaScript", "Html/Css", "SQL"];
+const programmingLanguages = ["Python", "JavaScript", "Html/Css", "SQL", "PostgreSQL"];
 
 const technologies = [
   "Django",
@@ -8,10 +8,7 @@ const technologies = [
   "React.js",
   "Tailwind Css",
   "Git/GitHub",
-  "Open AI",
   "MySQL",
-  "Render",
-  "Vercel",
   "Docker",
   "Postman",
   "PyCharm",

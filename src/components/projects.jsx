@@ -2,14 +2,14 @@ import React from "react";
 
 const projects = [
   {
-    title: "LOST & FOUND PORTAL",
+    title: "FindIt",
     description:
-      "A secure platform where users can report, search, and recover lost or found items within their community.",
-    stack: ["Python", "Django", "HTML/CSS"],
-    status: "In Development",
-    statusColor: "#C8BD56",
-    github: "https://github.com/Yaswanthpatnam/Lost_and_found",
-    live: "#",
+      "FindIt is a Full Stack Web application where it enables users to search lost belongings and submit found things .It was developed by using Django, Postgres for backend and React.js, Tailwind CSS for frontend. ",
+    stack: ["Django Rest Framework", "PostgreSQL", "React.js", "Tailwind CSS", "JavaScript", "Docker"],
+    status: "Live",
+    statusColor: "#83CE7E",
+    github: "https://github.com/Yaswanthpatnam/FindIt",
+    live: "https://findit-bice.vercel.app/",
   },
   {
     title: "To-Do App",

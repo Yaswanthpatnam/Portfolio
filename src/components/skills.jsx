@@ -4,16 +4,18 @@ const programmingLanguages = ["Python", "JavaScript", "Html/Css", "SQL", "Postgr
 
 const technologies = [
   "Django",
+  "Django Rest Framework",
   "Flask",
   "React.js",
   "Tailwind Css",
-  "Git/GitHub",
   "MySQL",
+  "Redis",
+  "Git/GitHub",
   "Docker",
   "Postman",
   "PyCharm",
   "VS Code",
-  "Figma"
+  "Figma",
 ];
 
 const Skills = () => {

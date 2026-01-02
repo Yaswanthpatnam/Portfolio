@@ -2,24 +2,46 @@ import React from "react";
 
 const projects = [
   {
+    title: "HireLogiX",
+    description:
+      "HireLogix is a production-ready full-stack job application tracking platform that allows users to manage, filter, and track job applications across multiple pipeline stages. The system includes secure authentication, pagination, caching, and cloud-native deployment, built with a scalable backend and a modern responsive frontend.",
+
+    stack: [
+      "Django",
+      "Django Rest Framework (DRF)",
+      "PostgreSQL (Neon)",
+      "React.js",
+      "Tailwind CSS",
+      "JavaScript",
+      "Redis",
+      "JWT Authentication",
+      "Docker",
+      "Cloudinary",
+      "Render",
+      "Vercel",
+    ],
+    status: "Live",
+    statusColor: "#83CE7E",
+    github: "https://github.com/Yaswanthpatnam/hirelogix",
+    live: "https://hirelogix.vercel.app/",
+  },
+  {
     title: "FindIt",
     description:
       "FindIt is a Full Stack Web application where it enables users to search lost belongings and submit found things .It was developed by using Django, Postgres for backend and React.js, Tailwind CSS for frontend. ",
-    stack: ["Django Rest Framework", "PostgreSQL", "React.js", "Tailwind CSS", "JavaScript", "Figma", "Docker"],
+    stack: [
+      "Django Rest Framework",
+      "PostgreSQL",
+      "React.js",
+      "Tailwind CSS",
+      "JavaScript",
+      "Figma",
+      "Docker",
+    ],
     status: "Live",
     statusColor: "#83CE7E",
     github: "https://github.com/Yaswanthpatnam/FindIt",
     live: "https://findit-bice.vercel.app/",
-  },
-  {
-    title: "To-Do App",
-    description:
-      "A simple yet powerful app to organize daily tasks and boost productivity effortlessly.",
-    stack: ["JavaScript", "React.js", "CSS", "Axios"],
-    status: "Live",
-    statusColor: "#83CE7E",
-    github: "https://github.com/Yaswanthpatnam/Todo-app",
-    live: "https://todo-app-ashen-nine.vercel.app/",
   },
   {
     title: "Weather App",
@@ -31,12 +53,24 @@ const projects = [
     github: "https://github.com/Yaswanthpatnam/weather",
     live: "https://weather-app-ma7h.onrender.com/",
   },
+    {
+    title: "To-Do App",
+    description:
+      "A simple yet powerful app to organize daily tasks and boost productivity effortlessly.",
+    stack: ["JavaScript", "React.js", "CSS", "Axios"],
+    status: "Live",
+    statusColor: "#83CE7E",
+    github: "https://github.com/Yaswanthpatnam/Todo-app",
+    live: "https://todo-app-ashen-nine.vercel.app/",
+  },
 ];
 
 const Projects = () => {
   return (
     <section className="panel px-4 py-8 sm:px-8 md:px-10 md:py-12">
-      <h2 className="font-sansation text-2xl tracking-[0.1em] sm:text-3xl">PROJECTS</h2>
+      <h2 className="font-sansation text-2xl tracking-[0.1em] sm:text-3xl">
+        PROJECTS
+      </h2>
 
       <div className="mt-6 space-y-6 sm:mt-8 sm:space-y-8">
         {projects.map((project) => (
@@ -76,7 +110,10 @@ const Projects = () => {
               {project.stack.join(", ")}
             </div>
 
-            <div className="mt-6 inline-flex items-center rounded-full border border-white/40 bg-[#282829] px-4 py-2 text-base font-semibold tracking-[0.05em]" style={{ color: project.statusColor }}>
+            <div
+              className="mt-6 inline-flex items-center rounded-full border border-white/40 bg-[#282829] px-4 py-2 text-base font-semibold tracking-[0.05em]"
+              style={{ color: project.statusColor }}
+            >
               {project.status}
             </div>
           </article>

@@ -1,6 +1,27 @@
 import React from "react";
 
 const projects = [
+   {
+    title: "BillGenerator",
+    description:
+      "BillGenerator is a responsive travel billing platform that allows travel agencies and cab operators to generate professional trip sheets and cash bills with real-time previews and high-quality PDF exports. The application ensures consistent invoice formatting across devices and downloadable documents.",
+
+    stack: [
+      "React.js",
+      "JavaScript",
+      "Tailwind CSS",
+      "HTML 5",
+      "CSS3",
+      "jspdf",
+      "html2canvas",
+      "Vite",
+      "Vercel",
+    ],
+    status: "Live",
+    statusColor: "#83CE7E",
+    github: "https://github.com/Yaswanthpatnam/billGenerator",
+    live: "https://bill-generator-tawny-seven.vercel.app/",
+  },
   {
     title: "HireLogiX",
     description:

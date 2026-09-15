@@ -1,0 +1,179 @@
+[
+  {
+    "id": "hirelogix",
+    "title": "HireLogiX",
+    "subtitle": "Gmail-Powered Job Search Tracking & Insights",
+    "description": "HireLogix connects to Gmail and turns scattered hiring emails into a structured view of the user's job search. It identifies applications, assessments, interviews, offers, and rejections, filters irrelevant and sensitive emails, and uses Google Gemini to extract the company, role, and application stage. Related emails are combined into one application and presented through a visual dashboard with application statistics, pipeline tracking, timelines, and job-search insights.",
+    "category": "fullstack",
+    "categoryLabel": "Full-Stack & AI",
+    "stack": [
+      "React.js",
+      "Vite",
+      "Tailwind CSS",
+      "Django",
+      "Django REST Framework",
+      "PostgreSQL",
+      "SQLite",
+      "Google OAuth 2.0",
+      "Gmail API",
+      "Gmail History API",
+      "Google Gemini API",
+      "Pydantic",
+      "JWT Authentication",
+      "Docker",
+      "Render",
+      "Vercel"
+    ],
+    "status": "Live",
+    "statusColor": "#83CE7E",
+    "github": "https://github.com/Yaswanthpatnam/hirelogix/tree/hirelogix-v2",
+    "live": "https://hirelogix.vercel.app/",
+    "featured": true,
+    "highlights": [
+      "Processes Gmail hiring emails into structured applications while filtering banking, OTP, personal, promotional, and job-alert emails",
+      "Visual dashboard with application statistics, filterable applications, Kanban pipeline, recent updates, and detailed application records",
+      "Combines related hiring emails into one application with a chronological timeline and continuously updated application status"
+    ]
+  },
+
+  {
+    "id": "bill-generator",
+    "title": "TripBill",
+    "subtitle": "Digital Billing for Indian Travel & Cab Operations",
+    "description": "TripBill is a browser-based billing application built for Indian travel and cab operators. It provides a Single Trip Sheet for corporate, airport, outstation, and hourly bookings, along with a Multi-Trip Cash Bill for recording multiple daily duties. Trip costs are calculated in real time and exported as high-resolution printable PDFs directly from the browser.",
+    "category": "frontend",
+    "categoryLabel": "Frontend & Utilities",
+    "stack": [
+      "React.js",
+      "Vite",
+      "JavaScript",
+      "Tailwind CSS",
+      "Lucide React",
+      "HTML5",
+      "CSS3",
+      "html2canvas",
+      "jsPDF",
+      "Node.js",
+      "Vercel"
+    ],
+    "status": "Live",
+    "statusColor": "#83CE7E",
+    "github": "https://github.com/Yaswanthpatnam/billGenerator",
+    "live": "https://bill-generator-tawny-seven.vercel.app/",
+    "featured": true,
+    "highlights": [
+      "Two travel billing workflows: A4 landscape Single Trip Sheets and portrait Multi-Trip Cash Bills with dynamic duty entries",
+      "Real-time calculations for kilometres, hours, tolls, parking, driver bata, night charges, advances, balances, and totals",
+      "High-resolution PDF generation directly in the browser with Indian Rupee localization and print-ready layouts"
+    ]
+  },
+  {
+  "id": "ak-tours",
+  "title": "AK Tours & Travels",
+  "subtitle": "Bengaluru Cab Booking & Travel Platform",
+  "description": "A React-based cab booking platform built for Bengaluru and Karnataka travel, allowing customers to book airport transfers, city rentals, outstation trips, and corporate rides through a single interactive booking experience. It includes real-time fare calculation, vehicle selection, Karnataka tour packages, transparent fare breakdowns, and WhatsApp-based booking requests.",
+  "category": "frontend",
+  "categoryLabel": "Frontend & Booking",
+  "stack": [
+    "React.js",
+    "Vite",
+    "Tailwind CSS",
+    "JavaScript",
+    "Lucide React",
+    "ESLint",
+    "Vercel"
+  ],
+  "status": "Live",
+  "statusColor": "#83CE7E",
+  "github": "https://github.com/Yaswanthpatnam/ak-tours",
+  "live": "https://aktours-travels.vercel.app/",
+  "featured": true,
+  "highlights": [
+    "Interactive booking engine supporting BLR airport transfers, hourly rentals, Karnataka outstation trips, and corporate bookings",
+    "Real-time fare calculation with vehicle selection, trip duration, included kilometres, driver charges, and transparent cost breakdowns",
+    "WhatsApp booking dispatch with structured trip details, plus vehicle fleet browsing and curated Karnataka tour packages"
+  ]
+},
+
+  {
+    "id": "findit",
+    "title": "FindIt",
+    "subtitle": "Campus Lost & Found Recovery Platform",
+    "description": "FindIt is a campus-focused lost-and-found platform that helps students and faculty recover misplaced belongings through structured search and reporting. Users can search reported found items by category, campus location, and date, or quickly report something they found with photos and verified contact details. The platform replaces scattered group messages with searchable records and a safer recovery workflow.",
+    "category": "fullstack",
+    "categoryLabel": "Full-Stack",
+    "stack": [
+      "React.js",
+      "Vite",
+      "Tailwind CSS",
+      "Django",
+      "Django REST Framework",
+      "PostgreSQL",
+      "JWT Authentication",
+      "Axios",
+      "Docker",
+      "Vercel",
+      "Render"
+    ],
+    "status": "Live",
+    "statusColor": "#83CE7E",
+    "github": "https://github.com/Yaswanthpatnam/FindIt",
+    "live": "https://findit-bice.vercel.app/",
+    "featured": false,
+    "highlights": [
+      "Searches found items using campus zone, category, item name, date, and optional time filters",
+      "Quick found-item reporting with image upload, 10-digit contact validation, descriptions, and category selection",
+      "JWT-protected API with PostgreSQL, authenticated contact information, and campus-specific recovery safeguards"
+    ]
+  },
+
+  {
+    "id": "weather-app",
+    "title": "Weather App",
+    "subtitle": "Real-Time Weather Forecasting Application",
+    "description": "A responsive weather application that fetches current weather conditions and forecasts for a requested location through the OpenWeather API, with server-side handling for invalid locations and API failures.",
+    "category": "backend",
+    "categoryLabel": "Backend & API",
+    "stack": [
+      "Python",
+      "Django",
+      "OpenWeatherAPI",
+      "Tailwind CSS"
+    ],
+    "status": "Live",
+    "statusColor": "#83CE7E",
+    "github": "https://github.com/Yaswanthpatnam/weather",
+    "live": "https://weather-app-ma7h.onrender.com/",
+    "featured": false,
+    "highlights": [
+      "Integrates Django with the OpenWeather REST API",
+      "Handles invalid locations and API failures on the server",
+      "Responsive weather interface deployed on Render"
+    ]
+  },
+
+  {
+    "id": "todo-app",
+    "title": "To-Do App",
+    "subtitle": "Simple Task Management Application",
+    "description": "A lightweight React task management application for creating, organizing, filtering, and completing everyday tasks through a simple responsive interface.",
+    "category": "frontend",
+    "categoryLabel": "Frontend",
+    "stack": [
+      "JavaScript",
+      "React.js",
+      "CSS",
+      "Axios"
+    ],
+    "status": "Live",
+    "statusColor": "#83CE7E",
+    "github": "https://github.com/Yaswanthpatnam/Todo-app",
+    "live": "https://todo-app-ashen-nine.vercel.app/",
+    "featured": false,
+    "highlights": [
+      "Create, update, complete, and filter tasks through a responsive React interface",
+      "Separate completed and pending task views for quick task management",
+      "Deployed as a lightweight web application on Vercel"
+    ]
+  }
+]

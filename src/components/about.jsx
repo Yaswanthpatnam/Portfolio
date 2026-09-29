@@ -1,22 +1,22 @@
 import React from "react";
-import { Compass, Palette, Terminal, Sparkles } from "lucide-react";
+import { Cpu, Sparkles, Layers } from "lucide-react";
 
 export const About = () => {
   const pillars = [
     {
-      icon: <Compass className="h-5 w-5 text-[var(--accent)]" />,
-      title: "Mindset Over Title",
-      text: "Believing that being a developer is about an exploratory problem-solving mindset, curiosity, and continuous learning rather than just labels.",
+      icon: <Cpu className="h-5 w-5 text-[var(--accent)]" />,
+      title: "Foundational Architecture",
+      text: "Writing modular, clean, and maintainable code grounded in strong computer science fundamentals, data modeling, algorithmic efficiency, and scalable system design.",
     },
     {
-      icon: <Palette className="h-5 w-5 text-[var(--accent)]" />,
-      title: "Design-Driven Engineering",
-      text: "Crafting wireframes and design systems in Figma first, then implementing them into clean, performant, responsive code.",
+      icon: <Sparkles className="h-5 w-5 text-[var(--accent)]" />,
+      title: "AI-Integrated Workflows",
+      text: "Leveraging artificial intelligence, LLM APIs, and modern automated developer toolchains to accelerate engineering velocity and create intelligent, future-ready applications.",
     },
     {
-      icon: <Terminal className="h-5 w-5 text-[var(--accent)]" />,
-      title: "Full-Stack Reliability",
-      text: "Architecting solid RESTful APIs and PostgreSQL databases while maintaining smooth, modern component interactions on the frontend.",
+      icon: <Layers className="h-5 w-5 text-[var(--accent)]" />,
+      title: "End-to-End Ownership",
+      text: "Taking complete ownership from problem formulation and architectural design to pixel-precise interfaces, containerized deployment, and continuous performance tuning.",
     },
   ];
 
@@ -28,7 +28,7 @@ export const About = () => {
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
             <span className="font-albert text-xs sm:text-sm font-semibold tracking-widest uppercase text-[var(--accent)]">
-              01 // Biography
+              01 // Philosophy & Approach
             </span>
           </div>
           <h2 className="font-sansation text-2xl font-bold tracking-[0.1em] text-[var(--text-primary)] sm:text-3xl lg:text-4xl">
@@ -37,16 +37,25 @@ export const About = () => {
         </div>
 
         {/* Narrative */}
-        <div className="relative rounded-2xl border border-[var(--panel-border)] bg-[var(--card-bg)] p-6 sm:p-8">
-          <p className="font-albert text-base leading-relaxed text-[color:var(--text-muted)] sm:text-lg sm:leading-8">
-            Hey, I'm <strong className="font-semibold text-[var(--text-primary)]">Yaswanth</strong> — a full-stack developer who truly believes that being a developer is more about the mindset than just a title. I love creating things, exploring new ideas, and doing something different every time I start a project.
+        <div className="relative rounded-2xl border border-[var(--panel-border)] bg-[var(--card-bg)] p-6 sm:p-8 space-y-4">
+          <p className="font-albert text-lg font-semibold tracking-wide text-[var(--accent)] sm:text-xl">
+            "I don’t define myself by a specific framework or toolset — I define myself as an engineer who solves problems from the ground up."
           </p>
-          <p className="mt-4 font-albert text-base leading-relaxed text-[color:var(--text-muted)] sm:text-lg sm:leading-8">
-            I constantly try to upgrade myself, learn new things, and experiment with what's next — whether it's a new design approach, a fresh concept, or a new technology that excites me. I'm someone who enjoys designing, building, and thinking creatively. I find joy in turning ideas into something real.
+
+          <p className="font-albert text-base leading-relaxed text-[color:var(--text-muted)] sm:text-lg sm:leading-8">
+            My approach to software development stands on two pillars: <strong className="font-semibold text-[var(--text-primary)]">deep respect for fundamentals</strong> and a <strong className="font-semibold text-[var(--text-primary)]">relentless curiosity for what’s next</strong>.
+          </p>
+
+          <p className="font-albert text-base leading-relaxed text-[color:var(--text-muted)] sm:text-lg sm:leading-8">
+            On one hand, I care deeply about core engineering principles: clean architecture, data structures, predictable state, and building systems that scale reliably under load. On the other hand, the software landscape is evolving faster than ever. I actively integrate modern AI tools, automated pipelines, and intelligent API workflows into how I design, develop, and test software.
+          </p>
+
+          <p className="font-albert text-base leading-relaxed text-[color:var(--text-muted)] sm:text-lg sm:leading-8">
+            I treat every project as an opportunity to master new paradigms — whether that means digging into low-level mechanics, optimizing database query performance, or architecting intelligent, AI-augmented applications. For me, software engineering is a craft of daily learning, critical thinking, and turning complex ideas into dependable software.
           </p>
         </div>
 
-        {/* Philosophy Cards */}
+        {/* Engineering Pillars */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
           {pillars.map((pillar, idx) => (
             <div

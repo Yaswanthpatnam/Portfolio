@@ -1,65 +1,58 @@
 /**
  * Skills Data
- * Core technologies demonstrated across full-stack, AI-integrated,
- * frontend, API, and deployment projects.
+ * Categorized around core engineering foundations, system design,
+ * modern frontend engineering, and AI-integrated workflows.
  */
 
 export const skillCategories = [
   {
-    title: "Programming Languages",
+    title: "Core Languages & Systems Logic",
     description:
-      "Languages used for backend development, web applications, data handling, and client-side development.",
+      "Foundational languages applied to algorithms, business logic, asynchronous tasks, and database queries.",
     skills: [
-      { name: "Python", level: "Core", tag: "Backend & APIs" },
-      { name: "JavaScript", level: "Core", tag: "ES6+ / React" },
-      { name: "SQL", level: "Proficient", tag: "Relational Queries" },
-      { name: "HTML5 / CSS3", level: "Proficient", tag: "Responsive UI" },
+      { name: "Python", level: "Core", tag: "Algorithms & Systems" },
+      { name: "JavaScript", level: "Core", tag: "Modern ES6+" },
+      { name: "SQL", level: "Proficient", tag: "Query Optimization" },
+      { name: "HTML5 / CSS3", level: "Proficient", tag: "Semantic & Accessible" },
     ],
   },
-
   {
-    title: "Frameworks & Development",
+    title: "Backend Architecture & Data Modeling",
     description:
-      "Frameworks and libraries used to build full-stack applications, REST APIs, and responsive interfaces.",
+      "Designing scalable server-side systems, relational data structures, secure authentication, and high-performance APIs.",
     skills: [
-      { name: "Django", level: "Proficient", tag: "Backend Development" },
-      { name: "Django REST Framework", level: "Proficient", tag: "REST APIs" },
-      { name: "React.js", level: "Proficient", tag: "SPA & Components" },
-      { name: "Vite", level: "Proficient", tag: "Frontend Tooling" },
-      { name: "Tailwind CSS", level: "Proficient", tag: "Responsive Styling" },
-      { name: "Flask", level: "Intermediate", tag: "Python Web Apps" },
+      { name: "Django", level: "Advanced", tag: "Enterprise Backend" },
+      { name: "Django REST Framework", level: "Advanced", tag: "REST Architecture" },
+      { name: "PostgreSQL", level: "Proficient", tag: "Relational Schemas" },
+      { name: "MySQL", level: "Proficient", tag: "RDBMS" },
+      { name: "Redis", level: "Intermediate", tag: "In-Memory Caching" },
+      { name: "JWT & OAuth 2.0", level: "Proficient", tag: "Secure Auth" },
+      { name: "Flask", level: "Intermediate", tag: "Microservices" },
     ],
   },
-
   {
-    title: "Databases, APIs & Integrations",
+    title: "Frontend & UI Engineering",
     description:
-      "Databases and external services used for application data, authentication, automation, and AI-powered workflows.",
+      "Crafting performant client-side architectures, predictable state management, and fluid responsive design systems.",
     skills: [
-      { name: "PostgreSQL", level: "Proficient", tag: "Primary RDBMS" },
-      { name: "MySQL", level: "Proficient", tag: "Relational Data" },
-      { name: "Google Gemini API", level: "Proficient", tag: "AI Integration" },
-      { name: "Gmail API", level: "Proficient", tag: "Email Integration" },
-      { name: "Google OAuth 2.0", level: "Proficient", tag: "Authentication" },
-      { name: "JWT", level: "Proficient", tag: "API Authentication" },
-      { name: "Axios", level: "Proficient", tag: "HTTP Client" },
-      { name: "Pydantic", level: "Working", tag: "Data Validation" },
+      { name: "React.js", level: "Proficient", tag: "Component Architecture" },
+      { name: "Vite", level: "Proficient", tag: "Build Tooling" },
+      { name: "Tailwind CSS", level: "Proficient", tag: "Design Systems" },
+      { name: "Axios / Fetch", level: "Proficient", tag: "API Consumption" },
+      { name: "Figma", level: "Proficient", tag: "Wireframing & UI/UX" },
     ],
   },
-
   {
-    title: "Tools & Deployment",
+    title: "AI Workflows, DevOps & Modern Tooling",
     description:
-      "Tools used for development, API testing, version control, containerization, and production deployment.",
+      "Leveraging modern AI-augmented workflows, containerization, intelligent APIs, and automated deployments.",
     skills: [
-      { name: "Git & GitHub", level: "Proficient", tag: "Version Control" },
+      { name: "AI & LLM Integration", level: "Proficient", tag: "Google Gemini API" },
+      { name: "AI-Augmented Dev Workflows", level: "Proficient", tag: "Rapid Engineering" },
       { name: "Docker", level: "Proficient", tag: "Containerization" },
-      { name: "Postman", level: "Proficient", tag: "API Testing" },
-      { name: "Figma", level: "Proficient", tag: "UI/UX & Wireframes" },
-      { name: "Vercel", level: "Proficient", tag: "Frontend Deployment" },
-      { name: "Render", level: "Working", tag: "Backend Deployment" },
-      { name: "jsPDF", level: "Working", tag: "PDF Generation" },
-      { name: "html2canvas", level: "Working", tag: "PDF Rendering" },
+      { name: "Git & GitHub", level: "Proficient", tag: "Collaborative VCS" },
+      { name: "Postman", level: "Proficient", tag: "API Verification" },
+      { name: "Cloud Deployments", level: "Proficient", tag: "Render & Vercel" },
     ],
   },
 ];

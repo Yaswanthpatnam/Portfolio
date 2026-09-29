@@ -1,4 +1,4 @@
-# 🌟 Yaswanth Babu Patnam |  Portfolio
+# 🌟 Yaswanth Babu Patnam | Developer Portfolio
 
 <div align="center">
 
@@ -7,8 +7,8 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-**A high-aesthetic, modern, responsive portfolio engineered with React, Tailwind CSS, and custom glassmorphism.**  
-Designed in Figma wireframes and brought to life with smooth micro-interactions, dark/light modes, and effortless project management.
+**A modern, high-aesthetic developer portfolio built with React.js, Tailwind CSS, and Vite.**  
+Features bespoke glassmorphism, fluid micro-interactions, dynamic dark/light modes, and effortless project management.
 
 [View Live Portfolio](https://findit-bice.vercel.app/) · [Report Bug](https://github.com/Yaswanthpatnam/portfolio/issues) · [Request Feature](https://github.com/Yaswanthpatnam/portfolio/issues)
 
@@ -152,7 +152,7 @@ portfolio/
 ## 👨‍💻 Author
 
 **Yaswanth Babu Patnam**
-- **Role**: Full Stack Developer & Creative Technologist
+- **Role**: Software Engineer
 - **GitHub**: [@Yaswanthpatnam](https://github.com/Yaswanthpatnam)
 - **LinkedIn**: [Yaswanth Patnam](https://www.linkedin.com/in/yaswanth-patnam-2aa28b340/)
 - **Email**: [patnamyaswanth79@gmail.com](mailto:patnamyaswanth79@gmail.com)

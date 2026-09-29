@@ -1,12 +1,12 @@
 import React from "react";
-import { Code2, Layout, Database, Wrench, Layers } from "lucide-react";
+import { Code2, Server, Layout, Sparkles, Layers } from "lucide-react";
 import { skillCategories } from "../data/skills";
 
 const categoryIcons = {
-  "Programming Languages": <Code2 className="h-5 w-5 text-[var(--accent)]" />,
-  "Frameworks & Frontend": <Layout className="h-5 w-5 text-[var(--accent)]" />,
-  "Databases & Caching": <Database className="h-5 w-5 text-[var(--accent)]" />,
-  "DevOps, Tools & Workflow": <Wrench className="h-5 w-5 text-[var(--accent)]" />,
+  "Core Languages & Systems Logic": <Code2 className="h-5 w-5 text-[var(--accent)]" />,
+  "Backend Architecture & Data Modeling": <Server className="h-5 w-5 text-[var(--accent)]" />,
+  "Frontend & UI Engineering": <Layout className="h-5 w-5 text-[var(--accent)]" />,
+  "AI Workflows, DevOps & Modern Tooling": <Sparkles className="h-5 w-5 text-[var(--accent)]" />,
 };
 
 const Skills = () => {
@@ -22,10 +22,10 @@ const Skills = () => {
             </span>
           </div>
           <h2 className="font-sansation text-2xl font-bold tracking-[0.1em] text-[var(--text-primary)] sm:text-3xl lg:text-4xl">
-            SKILLS & TOOLKIT
+            TECHNICAL TOOLKIT
           </h2>
           <p className="max-w-2xl font-albert text-base text-[color:var(--text-muted)]">
-            A versatile technical stack built around end-to-end web engineering, from data modeling and robust APIs to fluid client-side interfaces.
+            A balanced engineering foundation combining first-principles computer science, scalable backend architecture, and modern AI-augmented developer workflows.
           </p>
         </div>
 

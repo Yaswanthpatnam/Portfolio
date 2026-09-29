@@ -23,7 +23,7 @@ const Header = ({ onToggleTheme, theme }) => {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#83CE7E] opacity-75"></span>
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-[#83CE7E]"></span>
               </span>
-              Available for Opportunities
+              Available for Engineering Roles & Projects
             </span>
             <span className="inline-flex items-center rounded-full border border-[var(--panel-border)] bg-[var(--pill-bg)] px-3 py-1 font-albert text-xs sm:text-sm font-medium tracking-wide text-[color:var(--text-muted)]">
               alias Yaswanth
@@ -38,16 +38,19 @@ const Header = ({ onToggleTheme, theme }) => {
               <span className="tracking-[0.1em] text-[var(--text-primary)]"> PATNAM</span>
             </h1>
 
-            <p className="font-albert text-lg font-semibold tracking-wide text-[var(--accent)] sm:text-xl lg:text-2xl">
-              Full Stack Developer & Creative Technologist
-            </p>
+            <div className="space-y-1 pt-1">
+              <p className="font-albert text-xl font-bold tracking-wide text-[var(--accent)] sm:text-2xl lg:text-[1.75rem]">
+                Software Engineer
+              </p>
+              <p className="font-albert text-sm font-semibold tracking-wider text-[color:var(--text-muted)] sm:text-base">
+                Systems, Core Fundamentals & Modern AI Workflows
+              </p>
+            </div>
           </div>
 
           {/* Value Pitch */}
           <p className="max-w-xl font-albert text-base leading-relaxed text-[color:var(--text-muted)] sm:text-lg sm:leading-8">
-            Turning creative wireframes into production-grade, resilient software.
-            Specializing in scalable Python/Django backends, relational databases, and
-            clean, reactive interfaces built with modern React.
+            Engineering resilient, high-performance software by bridging foundational computer science with modern, AI-integrated workflows. Driven by first-principles problem solving, continuous exploration, and building scalable technology that delivers real impact.
           </p>
 
           {/* CTAs */}
@@ -93,27 +96,27 @@ const Header = ({ onToggleTheme, theme }) => {
           {/* Quick Metrics Bar */}
           <div className="grid grid-cols-3 gap-3 border-t border-[var(--panel-border)] pt-5 text-left">
             <div>
-              <p className="font-sansation text-xl font-bold text-[var(--text-primary)] sm:text-2xl">
-                5+
+              <p className="font-sansation text-lg font-bold text-[var(--text-primary)] sm:text-xl lg:text-2xl">
+                First-Principles
               </p>
               <p className="font-albert text-xs sm:text-sm text-[color:var(--text-muted)]">
-                Web Applications
+                Systems & CS Foundations
               </p>
             </div>
             <div>
-              <p className="font-sansation text-xl font-bold text-[var(--accent)] sm:text-2xl">
-                Full-Stack
+              <p className="font-sansation text-lg font-bold text-[var(--accent)] sm:text-xl lg:text-2xl">
+                AI-Integrated
               </p>
               <p className="font-albert text-xs sm:text-sm text-[color:var(--text-muted)]">
-                Architecture Focus
+                Modern Workflows
               </p>
             </div>
             <div>
-              <p className="font-sansation text-xl font-bold text-[var(--text-primary)] sm:text-2xl">
-                100%
+              <p className="font-sansation text-lg font-bold text-[var(--text-primary)] sm:text-xl lg:text-2xl">
+                Full-Lifecycle
               </p>
               <p className="font-albert text-xs sm:text-sm text-[color:var(--text-muted)]">
-                Figma to Reality
+                Design to Production
               </p>
             </div>
           </div>
@@ -131,13 +134,12 @@ const Header = ({ onToggleTheme, theme }) => {
           />
 
           {/* Main Portrait Frame */}
-          <div className="group relative h-64 w-52 overflow-hidden rounded-[2.2rem] border border-[var(--panel-border)] bg-[var(--card-bg)] shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:border-[var(--accent)] sm:h-80 sm:w-64 md:h-96 md:w-72 lg:h-[26rem] lg:w-[19.5rem]">
+          <div className="group relative h-72 w-56 overflow-hidden rounded-[2.2rem] border border-[var(--panel-border)] bg-[var(--card-bg)] shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:border-[var(--accent)] sm:h-84 sm:w-64 md:h-[25rem] md:w-72 lg:h-[28rem] lg:w-[20.5rem]">
             <img
               src="/hero.jpg"
               alt="Yaswanth Babu Patnam"
-              className="h-full w-full object-cover object-[center_18%] transition-transform duration-700 ease-out group-hover:scale-105"
+              className="h-full w-full object-cover object-[center_16%] transition-transform duration-700 ease-out group-hover:scale-105"
               onError={(e) => {
-                // Fallback to profile.jpg if needed
                 if (!e.currentTarget.src.includes("profile.jpg")) {
                   e.currentTarget.src = "/profile.jpg";
                 }
@@ -153,8 +155,8 @@ const Header = ({ onToggleTheme, theme }) => {
                 <MapPin className="h-3.5 w-3.5 text-[#C8BD56]" />
                 <span>India</span>
               </div>
-              <span className="text-[11px] font-medium tracking-wide text-white/80">
-                Full-Stack Eng.
+              <span className="text-[11px] font-medium tracking-wide text-white/90">
+                Software Engineer
               </span>
             </div>
           </div>

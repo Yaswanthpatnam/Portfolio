@@ -95,7 +95,7 @@ const Navbar = ({ onToggleTheme, theme }) => {
         {/* Right Actions: Resume, Theme Toggle, Mobile Toggle */}
         <div className="flex items-center gap-2 sm:gap-2.5">
           <a
-            href="https://drive.google.com/file/d/1_1Bs-nRHi9SsyyDo30H6twvvQOsuHLq1/view?usp=sharing"
+            href="https://drive.google.com/file/d/1u3ZuTw8TgJV-jIqoZ33dI0udva9JVRz9/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[var(--panel-border)] bg-[var(--pill-bg)] px-3.5 py-1.5 font-albert text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all hover:border-[var(--accent)] hover:text-[var(--accent)]"

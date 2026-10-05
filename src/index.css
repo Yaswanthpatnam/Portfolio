@@ -1,187 +1,303 @@
-@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-primary: #070709;
-  --bg-secondary: #101014;
+  --bg: #000000;
+  --bg-primary: #000000;
+  --bg-secondary: #08080a;
   --text-primary: #f4f4f6;
-  --text-muted: #9e9ea7;
-  --panel-bg: rgba(20, 20, 24, 0.55);
-  --panel-border: rgba(255, 255, 255, 0.09);
-  --panel-border-hover: rgba(200, 189, 86, 0.45);
+  --text-muted: #a1a1aa;
+  --card: rgba(8, 8, 12, 0.85);
+  --card-bg: rgba(8, 8, 12, 0.85);
+  --panel-bg: rgba(12, 12, 16, 0.7);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-lit: rgba(255, 255, 255, 0.28);
   --pill-bg: rgba(255, 255, 255, 0.04);
-  --card-bg: rgba(24, 24, 28, 0.65);
-  --accent: #c8bd56;
-  --accent-rgb: 200, 189, 86;
-  --live: #83ce7e;
-  --live-rgb: 131, 206, 126;
+  --accent: #ffffff;
+  --accent-silver: #e4e4e7;
+  --white-pure: #ffffff;
+  --white-silver: #e4e4e7;
+  --white-muted: #a1a1aa;
+  --white-faint: #71717a;
   color-scheme: dark;
 }
 
-[data-theme='light'] {
-  --bg-primary: #f6f7fa;
-  --bg-secondary: #ffffff;
-  --text-primary: #141418;
-  --text-muted: #575762;
-  --panel-bg: rgba(255, 255, 255, 0.85);
-  --panel-border: rgba(0, 0, 0, 0.08);
-  --panel-border-hover: rgba(184, 158, 41, 0.55);
-  --pill-bg: rgba(0, 0, 0, 0.04);
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --accent: #a3952f;
-  --accent-rgb: 163, 149, 47;
-  --live: #278637;
-  --live-rgb: 39, 134, 55;
-  color-scheme: light;
+* {
+  font-family: 'Satoshi', -apple-system, sans-serif;
+  letter-spacing: -0.015em;
+  box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+  background-color: #000000;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--white-silver);
+  overflow-x: hidden;
+  cursor: default;
+  margin: 0;
+  min-height: 100vh;
 }
 
 /* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(200, 189, 86, 0.25);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(200, 189, 86, 0.5);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 ::selection {
-  background: rgba(200, 189, 86, 0.35);
-  color: var(--text-primary);
+  background: #ffffff;
+  color: #000000;
 }
 
-@layer base {
-  * {
-    @apply box-border;
-  }
-
-  body {
-    @apply m-0 min-h-screen text-[var(--text-primary)] transition-colors duration-500 antialiased selection:bg-[var(--accent)] selection:text-black;
-    background: var(--bg-primary);
-    font-family: 'Albert Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-
-  #root {
-    @apply min-h-screen relative overflow-x-hidden;
-    background: var(--bg-primary);
-  }
+/* Typography Utility Classes */
+.font-display {
+  font-family: 'Clash Display', 'Satoshi', sans-serif !important;
+  letter-spacing: -0.025em;
 }
 
-@layer components {
-  .panel {
-    @apply w-full rounded-3xl border backdrop-blur-xl transition-all duration-300;
-    background: var(--panel-bg);
-    border-color: var(--panel-border);
-    box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.45);
-  }
-
-  .panel:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-
-  [data-theme='light'] .panel {
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.07);
-  }
-
-  /* User's signature pill with upgraded smooth sheen reflection */
-  .pill {
-    @apply relative inline-flex items-center justify-center overflow-hidden rounded-full border px-4 py-2 font-medium tracking-[0.03em] transition-all duration-300;
-    border-color: var(--panel-border);
-    background: var(--pill-bg);
-    color: var(--text-primary);
-  }
-
-  .pill::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -35%;
-    width: 35%;
-    height: 200%;
-    background: linear-gradient(120deg, transparent, rgba(200, 189, 86, 0.3), transparent);
-    transform: rotate(25deg);
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none;
-  }
-
-  .pill:hover::before {
-    opacity: 1;
-    transform: translateX(320%) rotate(25deg);
-  }
-
-  .pill:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 15px -3px rgba(var(--accent-rgb), 0.25);
-    transform: translateY(-1px);
-  }
-
-  .ghost-btn {
-    @apply inline-flex items-center gap-2 justify-center rounded-full border px-4 py-2 text-sm font-semibold tracking-wide transition-all duration-300;
-    border-color: var(--panel-border);
-    color: var(--text-primary);
-    background: var(--pill-bg);
-  }
-
-  .ghost-btn:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: rgba(var(--accent-rgb), 0.1);
-    box-shadow: 0 0 16px -2px rgba(var(--accent-rgb), 0.25);
-    transform: translateY(-1px);
-  }
-
-  .primary-btn {
-    @apply inline-flex items-center gap-2 justify-center rounded-full px-6 py-2.5 text-sm sm:text-base font-semibold tracking-wide transition-all duration-300 text-black shadow-lg;
-    background: linear-gradient(135deg, #e3d978 0%, #c8bd56 100%);
-    box-shadow: 0 4px 20px -2px rgba(200, 189, 86, 0.4);
-  }
-
-  .primary-btn:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px -2px rgba(200, 189, 86, 0.55);
-    filter: brightness(1.05);
-  }
-
-  .badge-live {
-    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs sm:text-sm font-semibold tracking-wider;
-    background: rgba(var(--live-rgb), 0.12);
-    border: 1px solid rgba(var(--live-rgb), 0.35);
-    color: var(--live);
-  }
+.font-script {
+  font-family: 'Caveat', cursive !important;
+  letter-spacing: 0.01em;
 }
 
-@layer utilities {
-  .font-sansation {
-    font-family: 'Sansation', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
+.font-mono {
+  font-family: 'Geist Mono', monospace !important;
+}
 
-  .font-albert {
-    font-family: 'Albert Sans', system-ui, sans-serif;
-  }
+.font-instrument,
+.font-serif-display {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  letter-spacing: -0.01em;
+}
 
-  .accent-gradient-text {
-    background: linear-gradient(135deg, #ffffff 0%, #e2dc96 60%, #c8bd56 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+/* ==========================================================================
+   2D LOCOMOTIVE & FEATHERED FLASHLIGHT SEARCHLIGHT BEAM
+   ========================================================================== */
+#train-engine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 38px;
+  height: 20px;
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform;
+  transform-origin: 19px 10px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.9));
+}
 
-  [data-theme='light'] .accent-gradient-text {
-    background: linear-gradient(135deg, #18181b 0%, #574e11 60%, #8e801b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+/* Naturally Feathered Organic Headlight Cone */
+.headlight-cone {
+  position: absolute;
+  top: 10px;
+  left: 33px;
+  transform: translateY(-50%);
+  width: 340px;
+  height: 220px;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    ellipse 100% 75% at 0% 50%,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.28) 20%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.02) 80%,
+    transparent 100%
+  );
+  -webkit-mask-image: conic-gradient(
+    from 68deg at 0% 50%,
+    transparent 0deg,
+    transparent 2deg,
+    black 14deg,
+    black 30deg,
+    transparent 42deg,
+    transparent 360deg
+  );
+  mask-image: conic-gradient(
+    from 68deg at 0% 50%,
+    transparent 0deg,
+    transparent 2deg,
+    black 14deg,
+    black 30deg,
+    transparent 42deg,
+    transparent 360deg
+  );
+  filter: blur(14px);
+  mix-blend-mode: screen;
+  opacity: 0.70;
+}
+
+/* Volumetric Ambient Atmosphere Cone */
+.headlight-cone-ambient {
+  position: absolute;
+  top: 10px;
+  left: 30px;
+  transform: translateY(-50%);
+  width: 420px;
+  height: 280px;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 100% 80% at 0% 50%,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.08) 35%,
+    rgba(255, 255, 255, 0.01) 75%,
+    transparent 100%
+  );
+  -webkit-mask-image: conic-gradient(
+    from 55deg at 0% 50%,
+    transparent 0deg,
+    transparent 5deg,
+    black 22deg,
+    black 48deg,
+    transparent 65deg,
+    transparent 360deg
+  );
+  mask-image: conic-gradient(
+    from 55deg at 0% 50%,
+    transparent 0deg,
+    transparent 5deg,
+    black 22deg,
+    black 48deg,
+    transparent 65deg,
+    transparent 360deg
+  );
+  filter: blur(24px);
+  mix-blend-mode: screen;
+  opacity: 0.45;
+}
+
+/* Headlamp Flare Core */
+.headlight-core-flare {
+  position: absolute;
+  top: 10px;
+  left: 34px;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 0 6px 2px rgba(255, 255, 255, 0.6),
+    0 0 14px 5px rgba(255, 255, 255, 0.25),
+    0 0 28px 8px rgba(255, 255, 255, 0.08);
+  z-index: 3;
+}
+
+/* ==========================================================================
+   OCEAN WAVES AT TERMINUS
+   ========================================================================== */
+@keyframes oceanSwell {
+  0% { transform: translateX(0) scaleY(1); }
+  50% { transform: translateX(-25%) scaleY(0.9); }
+  100% { transform: translateX(-50%) scaleY(1); }
+}
+
+.wave-band {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 150px;
+  background-repeat: repeat-x;
+}
+
+.wave-back {
+  opacity: 0.25;
+  animation: oceanSwell 16s infinite linear;
+  height: 180px;
+}
+
+.wave-mid {
+  opacity: 0.55;
+  animation: oceanSwell 10s infinite linear reverse;
+  height: 140px;
+}
+
+.wave-fore {
+  opacity: 0.95;
+  animation: oceanSwell 7s infinite linear;
+  height: 100px;
+}
+
+/* ==========================================================================
+   DESKTOP PIXEL DOG COMPANION
+   ========================================================================== */
+#dog-companion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate3d(80px, 80px, 0);
+  will-change: transform;
+  user-select: none;
+}
+
+.dog-svg {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.15));
+}
+
+@keyframes wag {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(18deg); }
+}
+
+.dog-tail {
+  transform-origin: 24px 21px;
+  animation: wag 0.35s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   RAILWAY SVG FULL-PAGE OVERLAY (Sleepers + Rails + Subtle Beam Glow)
+   ========================================================================== */
+#railway-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+.track-sleepers {
+  stroke: #222226;
+  stroke-width: 14;
+  stroke-dasharray: 2 7;
+  fill: none;
+}
+
+.track-rails {
+  stroke: #71717a;
+  stroke-width: 2;
+  fill: none;
+}
+
+.track-beam-glow {
+  stroke: #ffffff;
+  stroke-width: 2;
+  fill: none;
+  opacity: 0.35;
 }

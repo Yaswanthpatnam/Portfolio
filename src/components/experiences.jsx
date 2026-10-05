@@ -1,114 +1,102 @@
 import React from "react";
-import { Briefcase, Calendar, CheckCircle2 } from "lucide-react";
+import { Briefcase, Calendar } from "lucide-react";
 
 const experiencesData = [
   {
-  role: "Web Development Intern",
-  company: "Edunoverse Tech Solutions",
-  period: "Oct 2025 – Dec 2025",
-  type: "Internship",
-  description:
-    "Contributed to Bridge, a web application connecting local street vendors with customers through a centralized platform for browsing offerings and placing orders.",
-  highlights: [
-    "Integrated Google OAuth for user signup/login and JWT authentication for protected Django APIs.",
-    "Implemented Django order processing using models, views, and ORM to create orders and manage their status lifecycle.",
-    "Connected authenticated users with their application accounts and supported customer order requests through the backend."
-  ],
-  stack: [
-    "Django",
-    "Django REST Framework",
-    "React.js",
-    "PostgreSQL",
-    "Google OAuth",
-    "JWT",
-    "Django ORM"
-  ],
-},
-
+    role: "Web Development Intern",
+    company: "Edunoverse Tech Solutions",
+    period: "Oct 2025 – Dec 2025",
+    type: "Internship",
+    description:
+      "Contributed to Bridge, a web application connecting local street vendors with customers through a centralized platform for browsing offerings and placing orders.",
+    highlights: [
+      "Integrated Google OAuth for user signup/login and JWT authentication for protected Django APIs.",
+      "Implemented Django order processing using models, views, and ORM to create orders and manage their status lifecycle.",
+      "Connected authenticated users with their application accounts and supported customer order requests through the backend.",
+    ],
+    stack: [
+      "Django",
+      "Django REST Framework",
+      "React.js",
+      "PostgreSQL",
+      "Google OAuth",
+      "JWT",
+      "Django ORM",
+    ],
+  },
 ];
 
-const Experiences = () => {
+export const Experiences = () => {
   return (
-    <section id="experience" className="panel p-6 sm:p-8 md:p-10 lg:p-12">
-      <div className="space-y-8">
-        {/* Section Header */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
-            <span className="font-albert text-xs sm:text-sm font-semibold tracking-widest uppercase text-[var(--accent)]">
-              04 // Career Journey
-            </span>
-          </div>
-          <h2 className="font-sansation text-2xl font-bold tracking-[0.1em] text-[var(--text-primary)] sm:text-3xl lg:text-4xl">
+    <section id="experience" className="relative z-10 space-y-4 pt-2">
+      {/* Section Header */}
+      <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs text-zinc-500">[02]</span>
+          <h2 className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold">
             WORK EXPERIENCE
           </h2>
-          <p className="max-w-xl font-albert text-base text-[color:var(--text-muted)]">
-            Practical hands-on industry experience delivering real-world code, collaborative team development, and reliable web applications.
-          </p>
         </div>
+        <span className="text-[11px] font-mono text-zinc-400">Career Trajectory</span>
+      </div>
 
-        {/* Timeline Container */}
-        <div className="relative space-y-8 before:absolute before:inset-0 before:left-4 before:h-full before:w-0.5 before:bg-[var(--panel-border)] sm:before:left-6">
-          {experiencesData.map((exp, index) => (
-            <div key={index} className="relative flex items-start gap-4 sm:gap-6">
-              {/* Timeline Node Icon */}
-              <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-[var(--accent)] bg-[var(--bg-primary)] shadow-glow-gold sm:h-12 sm:w-12">
-                <Briefcase className="h-4 w-4 text-[var(--accent)] sm:h-5 sm:w-5" />
+      <div className="space-y-3">
+        {experiencesData.map((exp, index) => (
+          <div
+            key={index}
+            className="p-4 sm:p-5 rounded-xl border border-[var(--border)] bg-[var(--card)] backdrop-blur-md hover:border-[var(--border-lit)] transition-colors space-y-3"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div>
+                <div className="text-sm font-semibold text-white flex items-center gap-2">
+                  <span>{exp.company}</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/15">
+                    {exp.type}
+                  </span>
+                </div>
+                <div className="text-xs font-mono text-zinc-300 mt-0.5">
+                  {exp.role}
+                </div>
               </div>
 
-              {/* Experience Card */}
-              <article className="group flex-1 rounded-2xl border border-[var(--panel-border)] bg-[var(--card-bg)] p-6 transition-all duration-300 hover:border-[var(--accent)] hover:shadow-card-hover sm:p-8">
-                <div className="flex flex-col justify-between gap-2 border-b border-[var(--panel-border)] pb-4 md:flex-row md:items-center">
-                  <div>
-                    <span className="inline-block rounded-full bg-[#c8bd56]/15 px-2.5 py-0.5 text-xs font-semibold text-[#c8bd56]">
-                      {exp.type}
-                    </span>
-                    <h3 className="mt-1.5 font-albert text-xl font-bold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)] sm:text-2xl">
-                      {exp.role}
-                    </h3>
-                    <p className="font-albert text-base font-medium text-[var(--accent)]">
-                      {exp.company}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 font-albert text-xs sm:text-sm text-[color:var(--text-muted)]">
-                    <Calendar className="h-4 w-4 text-[var(--accent)]" />
-                    <span>{exp.period}</span>
-                  </div>
-                </div>
-
-                <p className="mt-4 font-albert text-base leading-relaxed text-[color:var(--text-muted)]">
-                  {exp.description}
-                </p>
-
-                {/* Bullet Highlights */}
-                <ul className="mt-4 space-y-2">
-                  {exp.highlights.map((item, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-2.5 font-albert text-sm text-[color:var(--text-muted)]"
-                    >
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#83CE7E]" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Tech Stack Pills */}
-                <div className="mt-5 flex flex-wrap gap-2 pt-2">
-                  {exp.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 font-albert text-xs font-medium text-[var(--text-primary)]"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </article>
+              <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400">
+                <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+                <span>{exp.period}</span>
+              </div>
             </div>
-          ))}
-        </div>
+
+            <p className="text-xs text-zinc-400 leading-relaxed font-light">
+              {exp.description}
+            </p>
+
+            {exp.highlights && exp.highlights.length > 0 && (
+              <ul className="space-y-1 pt-1">
+                {exp.highlights.map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="text-[11px] text-zinc-400 flex items-start gap-2"
+                  >
+                    <span className="text-white">›</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {exp.stack && exp.stack.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 font-mono text-[10px] pt-1">
+                {exp.stack.map((tech, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );

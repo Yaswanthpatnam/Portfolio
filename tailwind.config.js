@@ -7,8 +7,14 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sansation': ['Sansation', 'Outfit', 'Inter', 'sans-serif'],
-        'albert': ['Albert Sans', 'system-ui', 'sans-serif'],
+        sans: ['Satoshi', '-apple-system', 'sans-serif'],
+        display: ['Clash Display', 'Satoshi', 'sans-serif'],
+        script: ['Caveat', 'cursive'],
+        mono: ['Geist Mono', 'monospace'],
+        serif: ['Instrument Serif', 'Georgia', 'serif'],
+        instrument: ['Instrument Serif', 'Georgia', 'serif'],
+        sansation: ['Sansation', 'Outfit', 'Inter', 'sans-serif'],
+        albert: ['Albert Sans', 'system-ui', 'sans-serif'],
       },
       colors: {
         'panel-bg': 'rgba(45, 45, 52, 0.2)',

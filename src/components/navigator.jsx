@@ -1,176 +1,131 @@
-import React, { useState } from "react";
-import {
-  Mail,
-  ArrowUp,
-  Copy,
-  Check,
-  Send,
-  ExternalLink,
-} from "lucide-react";
-import { LinkedinIcon, GithubIcon } from "./icons";
+import React from "react";
+import { ArrowUpRight } from "lucide-react";
 
-const socials = [
-  {
-    label: "LinkedIn",
-    name: "yaswanth-patnam",
-    href: "https://www.linkedin.com/in/yaswanth-patnam-2aa28b340/",
-    icon: <LinkedinIcon className="h-5 w-5" />,
-    color: "#0a66c2",
-  },
-  {
-    label: "GitHub",
-    name: "Yaswanthpatnam",
-    href: "https://github.com/Yaswanthpatnam",
-    icon: <GithubIcon className="h-5 w-5" />,
-    color: "#ffffff",
-  },
-  {
-    label: "Email",
-    name: "patnamyaswanth79@gmail.com",
-    href: "mailto:patnamyaswanth79@gmail.com",
-    icon: <Mail className="h-5 w-5" />,
-    color: "#c8bd56",
-  },
-];
-
-const Navigator = () => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText("patnamyaswanth79@gmail.com");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
+export const Navigator = ({ onOpenContact, onOpenResume }) => {
   return (
-    <>
-      {/* Dedicated Connect Section */}
-      <section id="connect" className="panel p-6 sm:p-8 md:p-10 lg:p-12 text-center">
-        <div className="mx-auto max-w-2xl space-y-6">
-          <div className="inline-flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
-            <span className="font-albert text-xs sm:text-sm font-semibold tracking-widest uppercase text-[var(--accent)]">
-              05 // Get In Touch
-            </span>
+    <footer
+      id="ocean-terminal"
+      className="relative mt-20 pt-16 pb-24 overflow-hidden bg-black border-t border-zinc-900"
+    >
+      <div className="relative z-20 max-w-xl mx-auto px-6 text-center space-y-10 mb-20">
+        {/* TERMINAL DESTINATION: Get In Touch (Spotlighted by Locomotive Headlight at Track End) */}
+        <div id="get-in-touch-terminal" className="space-y-4 pt-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-zinc-950 text-[11px] font-mono text-zinc-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_white]" />
+            <span>TERMINAL STATION // ARRIVAL</span>
           </div>
 
-          <h2 className="font-sansation text-3xl font-bold tracking-[0.1em] text-[var(--text-primary)] sm:text-4xl">
-            LET'S BUILD SOMETHING EXTRAORDINARY
-          </h2>
+          <h3 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+            Let's Connect
+          </h3>
 
-          <p className="font-albert text-base leading-relaxed text-[color:var(--text-muted)] sm:text-lg">
-            Whether you have an exciting project, full-time opportunity, or want to collaborate on something new — my inbox is always open.
+          <p className="text-xs sm:text-sm text-zinc-400 font-light max-w-md mx-auto">
+            Open for engineering roles, technical consultations & distributed systems architecture.
           </p>
 
-          {/* Direct Email Action Box */}
-          <div className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row">
-            <a
-              href="mailto:patnamyaswanth79@gmail.com"
-              className="primary-btn w-full sm:w-auto"
-            >
-              <Send className="h-4 w-4" />
-              <span>Say Hello</span>
-            </a>
-
+          <div className="pt-2">
             <button
-              onClick={handleCopyEmail}
-              className="ghost-btn w-full sm:w-auto px-5 py-2.5"
+              id="btn-get-in-touch"
+              type="button"
+              onClick={onOpenContact}
+              className="px-7 py-3 rounded-full bg-white hover:bg-zinc-200 text-black font-mono text-xs font-semibold transition-all shadow-[0_0_30px_rgba(255,255,255,0.45)] cursor-pointer"
             >
-              {copied ? (
-                <>
-                  <Check className="h-4 w-4 text-[#83CE7E]" />
-                  <span className="text-[#83CE7E]">Email Copied!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-4 w-4 text-[var(--accent)]" />
-                  <span>Copy Email</span>
-                </>
-              )}
+              Get in Touch ↗
             </button>
           </div>
-
-          {/* Social Links Row */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-6">
-            {socials.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-2.5 rounded-full border border-[var(--panel-border)] bg-[var(--pill-bg)] px-5 py-2.5 font-albert text-sm font-medium transition-all duration-300 hover:border-[var(--accent)] hover:text-[var(--accent)] hover:shadow-glow-gold hover:-translate-y-1"
-                aria-label={social.label}
-              >
-                <span className="text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
-                  {social.icon}
-                </span>
-                <span>{social.label}</span>
-                <ExternalLink className="h-3 w-3 opacity-50 transition-opacity group-hover:opacity-100" />
-              </a>
-            ))}
-          </div>
-
-          <div className="pt-8 text-center">
-            <p className="font-albert text-xs tracking-wider text-[color:var(--text-muted)]">
-              Designed with Figma Wireframes & Engineered with React + Tailwind CSS by Yaswanth Babu Patnam.
-            </p>
-          </div>
         </div>
-      </section>
 
-      {/* Floating Bottom Quick Dock */}
-      <div className="sticky bottom-5 z-40 flex justify-center px-4">
-        <nav
-          aria-label="Floating quick navigation"
-          className="flex items-center gap-1 sm:gap-2 rounded-full border border-white/20 bg-[#121216]/80 px-4 py-2.5 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-white/30"
-        >
+        {/* Social Accounts (Clean & Direct) */}
+        <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-zinc-400 border-t border-zinc-900/80 pt-8">
           <a
-            href="#hero"
-            className="rounded-full px-3 py-1 font-albert text-xs sm:text-sm font-semibold text-[color:var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+            href="https://github.com/Yaswanthpatnam"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors"
           >
-            Top
+            GitHub
           </a>
           <a
-            href="#about"
-            className="rounded-full px-3 py-1 font-albert text-xs sm:text-sm font-semibold text-[color:var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+            href="https://www.linkedin.com/in/yaswanth-patnam-2aa28b340/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors"
           >
-            About
+            LinkedIn
           </a>
           <a
-            href="#skills"
-            className="rounded-full px-3 py-1 font-albert text-xs sm:text-sm font-semibold text-[color:var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+            href="mailto:patnamyaswanth79@gmail.com"
+            className="hover:text-white transition-colors"
           >
-            Skills
+            Email
           </a>
-          <a
-            href="#projects"
-            className="rounded-full px-3 py-1 font-albert text-xs sm:text-sm font-semibold text-[color:var(--text-muted)] transition-colors hover:text-[var(--accent)]"
-          >
-            Projects
-          </a>
-          <a
-            href="#experience"
-            className="hidden sm:inline-block rounded-full px-3 py-1 font-albert text-xs sm:text-sm font-semibold text-[color:var(--text-muted)] transition-colors hover:text-[var(--accent)]"
-          >
-            Experience
-          </a>
-
-          <div className="mx-1 h-4 w-px bg-white/20" />
-
           <button
-            onClick={scrollToTop}
-            aria-label="Back to top"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-[var(--accent)] hover:text-black"
+            type="button"
+            onClick={onOpenResume}
+            className="hover:text-white transition-colors cursor-pointer"
           >
-            <ArrowUp className="h-4 w-4" />
+            Resume.pdf
           </button>
-        </nav>
+        </div>
+
+        {/* BHAGAVAD GITA VERSE (Chapter 2, Verse 47) */}
+        <div className="pt-6 border-t border-zinc-900/80 space-y-3">
+          {/* Sanskrit Verse */}
+          <div className="text-zinc-300 font-serif text-sm sm:text-base tracking-widest leading-relaxed opacity-90 select-none">
+            कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।<br />
+            मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥
+          </div>
+
+          {/* English Translation */}
+          <p className="text-xs text-zinc-500 font-light italic max-w-md mx-auto leading-relaxed">
+            "You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions. Never consider yourself the cause of results, nor be attached to inaction."
+          </p>
+          <span className="block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">
+            — Bhagavad Gita 2.47
+          </span>
+        </div>
       </div>
-    </>
+
+      {/* Monochrome Animated Undulating Ocean Waves */}
+      <div className="absolute bottom-0 left-0 w-full h-44 pointer-events-none overflow-hidden z-10">
+        <svg
+          className="wave-band wave-back"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,40 C150,75 350,10 500,40 C650,75 900,15 1200,40 L1200,120 L0,120 Z"
+            fill="#08080a"
+            stroke="rgba(255,255,255,0.08)"
+            strokeWidth="1"
+          />
+        </svg>
+        <svg
+          className="wave-band wave-mid"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,50 C200,15 400,85 600,50 C800,15 1000,75 1200,50 L1200,120 L0,120 Z"
+            fill="#0c0c0e"
+            stroke="rgba(255,255,255,0.14)"
+            strokeWidth="1"
+          />
+        </svg>
+        <svg
+          className="wave-band wave-fore"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,60 C250,90 450,30 700,65 C950,100 1100,45 1200,60 L1200,120 L0,120 Z"
+            fill="#000000"
+            stroke="rgba(255,255,255,0.3)"
+            strokeWidth="1.2"
+          />
+        </svg>
+      </div>
+    </footer>
   );
 };
 

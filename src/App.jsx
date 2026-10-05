@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Navbar from "./components/navbar";
 import Header from "./components/header";
-import About from "./components/about";
 import Projects from "./components/projects";
 import Experiences from "./components/experiences";
 import Skills from "./components/skills";
@@ -462,7 +461,7 @@ export function App() {
             <div className="space-y-3 pt-2 text-xs font-mono text-zinc-300">
               <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-950 space-y-2">
                 <div className="text-sm font-semibold text-white">
-                  Yaswanth Babu Patnam
+                  Yaswanth Babu 
                 </div>
                 <div className="text-xs text-zinc-400">
                   Software Engineer · Systems & Modern AI Workflows · Bangalore

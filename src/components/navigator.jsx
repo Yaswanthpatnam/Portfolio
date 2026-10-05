@@ -46,7 +46,7 @@ export const Navigator = ({ onOpenContact, onOpenResume }) => {
             GitHub
           </a>
           <a
-            href="https://www.linkedin.com/in/yaswanth-patnam-2aa28b340/"
+            href="https://www.linkedin.com/in/yaswanth-babu-2aa28b340"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors"

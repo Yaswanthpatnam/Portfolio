@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 const roles = [
   { role: "Backend Engineer", article: "a" },
   { role: "Software Engineer", article: "a" },
-  { role: "Software Developer", article: "a" },
+  { role: "AI Developer", article: "an" },
+  { role: "AI Full-Stack Engineer", article: "an" },
 ];
 
 export const Header = () => {
@@ -41,7 +42,7 @@ export const Header = () => {
       </h1>
 
       <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-light max-w-xl pt-2">
-        I engineer resilient backend architectures, clean systems, and quiet digital interfaces. Navigating non-linear tracks through the dark void, building scalable software from source to terminal destination.
+        Architecting end-to-end web platforms that blend high-performance server APIs with modern LLM capabilities. Turning complex engineering problems into clean, production-grade solutions.
       </p>
 
       <div className="flex items-center gap-3 text-xs font-mono text-zinc-500 pt-1">

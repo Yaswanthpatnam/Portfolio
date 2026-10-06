@@ -1,7 +1,7 @@
 [
   {
-    "id": "hirelogix",
-    "title": "HireLogiX",
+    "id": "hirelogixai",
+    "title": "HireLogiX.AI",
     "subtitle": "Gmail-Powered Job Search Tracking & AI Insights",
     "description": "Converts Gmail hiring emails into a structured visual dashboard using Google Gemini to extract application stages, companies, and timelines.",
     "category": "fullstack",
@@ -10,7 +10,7 @@
     "status": "Live",
     "statusColor": "#83CE7E",
     "github": "https://github.com/Yaswanthpatnam/hirelogix/tree/hirelogix-v2",
-    "live": "https://hirelogix.vercel.app/",
+    "live": "https://hirelogix-ai.vercel.app/",
     "featured": true
   },
   {

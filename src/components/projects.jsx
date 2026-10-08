@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, ChevronDown, Sparkles } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { GithubIcon } from "./icons";
 import localProjects from "../data/projects.json";
 
@@ -21,6 +21,69 @@ export const Projects = () => {
 
   useEffect(() => {
     let isMounted = true;
+
+    const processRepos = (repos) => {
+      // Identify repos tagged specifically with topic 'portfolio'
+      const githubDiscovered = repos
+        .filter((repo) => {
+          if (repo.fork) return false;
+          const nameLower = repo.name.toLowerCase();
+          if (EXCLUDED_REPOS.includes(nameLower)) return false;
+          return repo.topics && repo.topics.includes("portfolio");
+        })
+        .map((repo) => {
+          const matchedLocal = localProjects.find(
+            (p) =>
+              p.title.toLowerCase() === repo.name.toLowerCase() ||
+              (p.github && p.github.toLowerCase().includes(repo.name.toLowerCase()))
+          );
+
+          const topicsStack =
+            repo.topics && repo.topics.length > 0
+              ? repo.topics.filter((t) => t !== "portfolio").slice(0, 4)
+              : repo.language
+              ? [repo.language]
+              : ["Software"];
+
+          return {
+            id: repo.name.toLowerCase(),
+            title: matchedLocal?.title || repo.name.replace(/[-_]/g, " "),
+            subtitle:
+              matchedLocal?.subtitle ||
+              repo.description ||
+              "Automated GitHub Project",
+            description:
+              matchedLocal?.description ||
+              repo.description ||
+              "Continuously integrated project repository tagged with #portfolio on GitHub.",
+            stack: matchedLocal?.stack || topicsStack,
+            status: repo.homepage ? "Live" : "Deployed",
+            github: repo.html_url,
+            live: repo.homepage || matchedLocal?.live || null,
+            year: new Date(repo.updated_at).getFullYear(),
+            isAutomated: !matchedLocal,
+          };
+        });
+
+      const existingIds = new Set(localProjects.map((p) => p.id.toLowerCase()));
+      const newFromGithub = githubDiscovered.filter(
+        (p) => !existingIds.has(p.id.toLowerCase())
+      );
+
+      if (newFromGithub.length > 0 && isMounted) {
+        setProjectsList([...newFromGithub, ...localProjects]);
+      }
+    };
+
+    // 1. Instant hydration from sessionStorage cache if available (prevents hitting GitHub 60 req/hr rate limit)
+    try {
+      const cached = sessionStorage.getItem("portfolio_github_repos");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) processRepos(parsed);
+      }
+    } catch {}
+
     const fetchGithubProjects = async () => {
       try {
         const res = await fetch(
@@ -32,60 +95,10 @@ export const Projects = () => {
         const repos = await res.json();
 
         if (Array.isArray(repos) && isMounted) {
-          // Identify repos tagged specifically with topic 'portfolio'
-          const githubDiscovered = repos
-            .filter((repo) => {
-              if (repo.fork) return false;
-              const nameLower = repo.name.toLowerCase();
-              if (EXCLUDED_REPOS.includes(nameLower)) return false;
-
-              // Only auto-ingest repos that explicitly have the 'portfolio' topic on GitHub
-              return repo.topics && repo.topics.includes("portfolio");
-            })
-            .map((repo) => {
-              const matchedLocal = localProjects.find(
-                (p) =>
-                  p.title.toLowerCase() === repo.name.toLowerCase() ||
-                  (p.github && p.github.toLowerCase().includes(repo.name.toLowerCase()))
-              );
-
-              // Extract top 3-4 topics as tech stack
-              const topicsStack =
-                repo.topics && repo.topics.length > 0
-                  ? repo.topics.filter((t) => t !== "portfolio").slice(0, 4)
-                  : repo.language
-                  ? [repo.language]
-                  : ["Software"];
-
-              return {
-                id: repo.name.toLowerCase(),
-                title: matchedLocal?.title || repo.name.replace(/[-_]/g, " "),
-                subtitle:
-                  matchedLocal?.subtitle ||
-                  repo.description ||
-                  "Automated GitHub Project",
-                description:
-                  matchedLocal?.description ||
-                  repo.description ||
-                  "Continuously integrated project repository tagged with #portfolio on GitHub.",
-                stack: matchedLocal?.stack || topicsStack,
-                status: repo.homepage ? "Live" : "Deployed",
-                github: repo.html_url,
-                live: repo.homepage || matchedLocal?.live || null,
-                year: new Date(repo.updated_at).getFullYear(),
-                isAutomated: !matchedLocal,
-              };
-            });
-
-          // Merge: include curated local projects plus newly discovered GitHub projects
-          const existingIds = new Set(localProjects.map((p) => p.id.toLowerCase()));
-          const newFromGithub = githubDiscovered.filter(
-            (p) => !existingIds.has(p.id.toLowerCase())
-          );
-
-          if (newFromGithub.length > 0) {
-            setProjectsList([...newFromGithub, ...localProjects]);
-          }
+          try {
+            sessionStorage.setItem("portfolio_github_repos", JSON.stringify(repos));
+          } catch {}
+          processRepos(repos);
         }
       } catch (err) {
         console.warn("GitHub dynamic project ingestion fallback:", err);

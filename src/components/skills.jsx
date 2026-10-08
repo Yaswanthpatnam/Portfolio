@@ -53,6 +53,116 @@ export const Skills = () => {
   useEffect(() => {
     let isMounted = true;
 
+    const parseAndApplyContributions = (data) => {
+      if (!data || !Array.isArray(data.contributions) || !isMounted) return;
+      const total2026 = data.total?.["2026"] ?? 62;
+      const total2025 = data.total?.["2025"] ?? 117;
+      const totalAll = total2026 + total2025;
+
+      // 1. Sort strictly chronologically by date
+      const sorted = data.contributions
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      // 2. Identify the target ending date (today or the latest entry in API <= today)
+      const todayStr = new Date().toISOString().split("T")[0];
+      let endIdx = sorted.findIndex((c) => c.date === todayStr);
+      if (endIdx === -1) {
+        const past = sorted.filter((c) => c.date <= todayStr);
+        endIdx = past.length > 0 ? sorted.indexOf(past[past.length - 1]) : sorted.length - 1;
+      }
+
+      // 3. Take rolling 365 days (52 full weeks + 1 day = 53 weeks)
+      const startIdx = Math.max(0, endIdx - 364);
+      const calendarDays = sorted.slice(startIdx, endIdx + 1);
+
+      // 4. Calculate accurate active streak
+      let streak = 0;
+      let checkIdx = endIdx;
+      if (sorted[checkIdx]?.count === 0 && checkIdx > 0) {
+        checkIdx--;
+      }
+      while (checkIdx >= 0 && sorted[checkIdx]?.count > 0) {
+        streak++;
+        checkIdx--;
+      }
+
+      // 5. Build 7-day columns (Sunday [0] to Saturday [6])
+      const weeks = [];
+      let currentWeek = [];
+
+      calendarDays.forEach((day) => {
+        const dt = new Date(day.date + "T00:00:00Z");
+        const dow = dt.getUTCDay();
+
+        if (weeks.length === 0 && currentWeek.length === 0 && dow > 0) {
+          for (let p = 0; p < dow; p++) currentWeek.push(null);
+        }
+
+        if (dow === 0 && currentWeek.length > 0) {
+          while (currentWeek.length < 7) currentWeek.push(null);
+          weeks.push(currentWeek);
+          currentWeek = [];
+        }
+
+        currentWeek.push({
+          date: day.date,
+          count: day.count,
+          level: Math.min(day.level, 4),
+          dow,
+          formattedDate: dt.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            timeZone: "UTC",
+          }),
+        });
+      });
+
+      if (currentWeek.length > 0) {
+        while (currentWeek.length < 7) currentWeek.push(null);
+        weeks.push(currentWeek);
+      }
+
+      // 6. Calculate month labels aligned above column indices
+      const months = [];
+      const monthNames = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+      let prevMonth = -1;
+
+      weeks.forEach((week, colIdx) => {
+        const firstValid = week.find((d) => d !== null);
+        if (!firstValid) return;
+        const m = new Date(firstValid.date + "T00:00:00Z").getUTCMonth();
+        if (m !== prevMonth) {
+          months.push({ colIndex: colIdx, name: monthNames[m] });
+          prevMonth = m;
+        }
+      });
+
+      setGithubStats({
+        total2026,
+        totalAll,
+        streak,
+      });
+
+      setCalendarData({
+        weeks,
+        months,
+      });
+    };
+
+    // Fast-hydrate from session cache if available
+    try {
+      const cached = sessionStorage.getItem("portfolio_github_contributions");
+      if (cached) {
+        parseAndApplyContributions(JSON.parse(cached));
+      }
+    } catch {}
+
     const fetchRealContributions = async () => {
       try {
         const res = await fetch(
@@ -61,107 +171,11 @@ export const Skills = () => {
         if (!res.ok) return;
         const data = await res.json();
 
-        if (data && Array.isArray(data.contributions) && isMounted) {
-          const total2026 = data.total?.["2026"] ?? 62;
-          const total2025 = data.total?.["2025"] ?? 117;
-          const totalAll = total2026 + total2025;
-
-          // 1. Sort strictly chronologically by date
-          const sorted = data.contributions
-            .slice()
-            .sort((a, b) => a.date.localeCompare(b.date));
-
-          // 2. Identify the target ending date (today or the latest entry in API <= today)
-          const todayStr = new Date().toISOString().split("T")[0];
-          let endIdx = sorted.findIndex((c) => c.date === todayStr);
-          if (endIdx === -1) {
-            const past = sorted.filter((c) => c.date <= todayStr);
-            endIdx = past.length > 0 ? sorted.indexOf(past[past.length - 1]) : sorted.length - 1;
-          }
-
-          // 3. Take rolling 365 days (52 full weeks + 1 day = 53 weeks)
-          const startIdx = Math.max(0, endIdx - 364);
-          const calendarDays = sorted.slice(startIdx, endIdx + 1);
-
-          // 4. Calculate accurate active streak
-          let streak = 0;
-          let checkIdx = endIdx;
-          if (sorted[checkIdx]?.count === 0 && checkIdx > 0) {
-            checkIdx--; // If today has 0 commits so far, count active streak ending yesterday
-          }
-          while (checkIdx >= 0 && sorted[checkIdx]?.count > 0) {
-            streak++;
-            checkIdx--;
-          }
-
-          // 5. Build 7-day columns (Sunday [0] to Saturday [6])
-          const weeks = [];
-          let currentWeek = [];
-
-          calendarDays.forEach((day) => {
-            const dt = new Date(day.date + "T00:00:00Z");
-            const dow = dt.getUTCDay();
-
-            // First week: pad front if first day is not Sunday
-            if (weeks.length === 0 && currentWeek.length === 0 && dow > 0) {
-              for (let p = 0; p < dow; p++) currentWeek.push(null);
-            }
-
-            // If Sunday and week is in progress, push week and start new one
-            if (dow === 0 && currentWeek.length > 0) {
-              while (currentWeek.length < 7) currentWeek.push(null);
-              weeks.push(currentWeek);
-              currentWeek = [];
-            }
-
-            currentWeek.push({
-              date: day.date,
-              count: day.count,
-              level: Math.min(day.level, 4),
-              dow,
-              formattedDate: dt.toLocaleDateString("en-US", {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                timeZone: "UTC",
-              }),
-            });
-          });
-
-          if (currentWeek.length > 0) {
-            while (currentWeek.length < 7) currentWeek.push(null);
-            weeks.push(currentWeek);
-          }
-
-          // 6. Calculate month labels aligned above column indices
-          const months = [];
-          const monthNames = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-          ];
-          let prevMonth = -1;
-
-          weeks.forEach((week, colIdx) => {
-            const firstValid = week.find((d) => d !== null);
-            if (!firstValid) return;
-            const m = new Date(firstValid.date + "T00:00:00Z").getUTCMonth();
-            if (m !== prevMonth) {
-              months.push({ colIndex: colIdx, name: monthNames[m] });
-              prevMonth = m;
-            }
-          });
-
-          setGithubStats({
-            total2026,
-            totalAll,
-            streak,
-          });
-
-          setCalendarData({
-            weeks,
-            months,
-          });
+        if (data && Array.isArray(data.contributions)) {
+          try {
+            sessionStorage.setItem("portfolio_github_contributions", JSON.stringify(data));
+          } catch {}
+          parseAndApplyContributions(data);
         }
       } catch (err) {
         console.warn("Real GitHub contribution fetch fallback:", err);

@@ -6,10 +6,10 @@ import Experiences from "./components/experiences";
 import Skills from "./components/skills";
 import Navigator from "./components/navigator";
 import ContactModal from "./components/addProjectModal";
-import { ArrowUpRight, X, FileText, Download, Link2, Check, Settings } from "lucide-react";
+import { X, FileText, Settings } from "lucide-react";
 
-// Catmull-Rom to Cubic Bezier Curve Converter
-function catmullRomToBezier(points, tension = 0.65) {
+// Monotonic Catmull-Rom to Cubic Bezier Curve Converter with zero loop/cusp guarantee
+function catmullRomToBezier(points, tension = 0.4) {
   if (points.length < 2) return "";
   const t = tension;
   let d = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
@@ -20,11 +20,18 @@ function catmullRomToBezier(points, tension = 0.65) {
     const p2 = points[i + 1];
     const p3 = i < points.length - 2 ? points[i + 2] : p2;
 
-    const cp1x = p1.x + ((p2.x - p0.x) * t) / 3;
-    const cp1y = p1.y + ((p2.y - p0.y) * t) / 3;
+    let cp1x = p1.x + ((p2.x - p0.x) * t) / 3;
+    let cp1y = p1.y + ((p2.y - p0.y) * t) / 3;
 
-    const cp2x = p2.x - ((p3.x - p1.x) * t) / 3;
-    const cp2y = p2.y - ((p3.y - p1.y) * t) / 3;
+    let cp2x = p2.x - ((p3.x - p1.x) * t) / 3;
+    let cp2y = p2.y - ((p3.y - p1.y) * t) / 3;
+
+    // Strict monotonic Y clamping to mathematically guarantee zero loops, cusps, or reversals
+    const dy = p2.y - p1.y;
+    if (dy > 0) {
+      cp1y = Math.max(p1.y, Math.min(p1.y + dy * 0.85, cp1y));
+      cp2y = Math.max(cp1y, Math.min(p2.y, cp2y));
+    }
 
     d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
   }
@@ -61,18 +68,32 @@ export function App() {
   const dogSvgRef = useRef(null);
   const dogPosRef = useRef({ x: 80, y: 80, targetX: 140, targetY: 140 });
 
-  // 1. Build Catmull-Rom Railway Track Waypoints
+  // 1. Build Railway Track Waypoints — strictly in margins & interstitial gaps, never obstructing text
   const buildTrackArchitecture = useCallback(() => {
     const docHeight = document.documentElement.scrollHeight;
     const docWidth = window.innerWidth;
     const mid = docWidth / 2;
-    const span = Math.min(360, Math.max(160, docWidth * 0.38));
-    const leftCol = Math.max(25, mid - span);
-    const rightCol = Math.min(docWidth - 30, mid + span);
+
+    // Measure the exact boundary of the centered content column
+    const contentEl = document.getElementById("main-content-column");
+    let contentLeft = Math.max(0, mid - 336);
+    let contentRight = Math.min(docWidth, mid + 336);
+
+    if (contentEl) {
+      const rect = contentEl.getBoundingClientRect();
+      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+      contentLeft = rect.left + scrollLeft;
+      contentRight = rect.right + scrollLeft;
+    }
+
+    const isMobile = docWidth < 768;
+    // Gutters placed comfortably in outer black margins outside the text column
+    const leftGutter = isMobile ? 16 : Math.max(16, Math.round(contentLeft - 44));
+    const rightGutter = isMobile ? 16 : Math.min(docWidth - 16, Math.round(contentRight + 44));
 
     // Starting Point: Cylindrical Depot (#track-origin)
     const originEl = document.getElementById("track-origin");
-    let startX = Math.round(Math.max(25, mid - span * 0.85));
+    let startX = isMobile ? 24 : Math.round(contentLeft + 24);
     let startY = 70;
 
     if (originEl) {
@@ -88,17 +109,43 @@ export function App() {
     }
 
     // Dynamic Section Anchor Waypoints
+    const heroEl = document.getElementById("hero-section");
     const projectsEl = document.getElementById("projects");
     const expEl = document.getElementById("experience");
     const analyticsEl = document.getElementById("analytics");
     const contactBtn = document.getElementById("btn-get-in-touch");
 
-    const yHero = Math.round(startY + 260);
-    const yProjects = projectsEl ? Math.round(projectsEl.offsetTop + 60) : Math.round(startY + 560);
+    const yHeroBottom = heroEl
+      ? Math.round(heroEl.offsetTop + heroEl.offsetHeight)
+      : Math.round(startY + 280);
+
+    const yProjectsTop = projectsEl
+      ? Math.round(projectsEl.offsetTop)
+      : Math.round(yHeroBottom + 80);
+
     const projectsHeight = projectsEl ? projectsEl.offsetHeight : 600;
-    const yProjectsMid = Math.round(yProjects + projectsHeight * 0.5);
-    const yExp = expEl ? Math.round(expEl.offsetTop + 60) : Math.round(yProjects + projectsHeight + 60);
-    const yAnalytics = analyticsEl ? Math.round(analyticsEl.offsetTop + 60) : Math.round(yExp + 450);
+    const yProjectsMid = Math.round(yProjectsTop + projectsHeight * 0.5);
+    const yProjectsBottom = projectsEl
+      ? Math.round(projectsEl.offsetTop + projectsHeight)
+      : Math.round(yProjectsTop + projectsHeight);
+
+    const yExpTop = expEl
+      ? Math.round(expEl.offsetTop)
+      : Math.round(yProjectsBottom + 80);
+
+    const expHeight = expEl ? expEl.offsetHeight : 400;
+    const yExpBottom = expEl
+      ? Math.round(expEl.offsetTop + expHeight)
+      : Math.round(yExpTop + expHeight);
+
+    const yAnalyticsTop = analyticsEl
+      ? Math.round(analyticsEl.offsetTop)
+      : Math.round(yExpBottom + 80);
+
+    const analyticsHeight = analyticsEl ? analyticsEl.offsetHeight : 500;
+    const yAnalyticsBottom = analyticsEl
+      ? Math.round(analyticsEl.offsetTop + analyticsHeight)
+      : Math.round(yAnalyticsTop + analyticsHeight);
 
     let btnX = mid;
     let btnY = docHeight - 320;
@@ -110,34 +157,62 @@ export function App() {
       btnY = Math.round(rect.top + scrollTop + rect.height / 2);
     }
 
-    // Terminal stop: 110px to the left of the button, pointing straight horizontally at it
-    const stopX = Math.round(btnX - 110);
+    // Terminal stop: to the left of the button, pointing straight horizontally at it
+    const stopX = Math.round(isMobile ? btnX - 85 : btnX - 110);
     const stopY = Math.round(btnY);
 
     if (endGroupRef.current) {
       endGroupRef.current.setAttribute("transform", `translate(${stopX}, ${stopY})`);
     }
 
-    // Construct smooth, natural Catmull-Rom S-curves:
-    // Starts at depot -> sweeps down past Hero -> curves across into Projects on right
-    // -> S-curves through middle of Projects, Experience & Analytics -> stops at terminal
-    const waypoints = [
-      { x: startX, y: startY },
-      { x: startX + 15, y: startY + 60 },
-      { x: Math.min(startX + 10, leftCol), y: yHero },
-      { x: mid, y: yHero + (yProjects - yHero) * 0.5 },
-      { x: rightCol, y: yProjects },
-      { x: leftCol + 30, y: yProjectsMid },
-      { x: rightCol - 20, y: yExp },
-      { x: mid, y: (yExp + yAnalytics) * 0.5 },
-      { x: leftCol + 20, y: yAnalytics },
-      { x: (leftCol + stopX) * 0.5, y: yAnalytics + (stopY - yAnalytics) * 0.5 },
-      { x: stopX - 120, y: stopY - 30 },
-      { x: stopX - 50, y: stopY - 3 },
-      { x: stopX, y: stopY },
-    ];
+    // Construct strictly monotonic waypoints ensuring the track stays in gutters
+    // and only crosses through empty vertical gaps between sections.
+    const waypoints = [];
+    let prevY = -Infinity;
+    const addWaypoint = (x, targetY, minDelta = 20) => {
+      const y = Math.max(Math.round(targetY), prevY + minDelta);
+      prevY = y;
+      waypoints.push({ x: Math.round(x), y });
+    };
 
-    const pathD = catmullRomToBezier(waypoints, 0.65);
+    addWaypoint(startX, startY, 0);
+    // Smoothly exit depot into left outer margin before reaching hero text
+    addWaypoint(leftGutter, startY + (isMobile ? 50 : 70), 25);
+    // Run down the left gutter alongside hero text — 100% text clearance
+    addWaypoint(leftGutter, yHeroBottom, 25);
+
+    if (isMobile) {
+      // On narrow mobile screens, stay reliably in the left padding margin
+      addWaypoint(leftGutter, yProjectsTop, 25);
+      addWaypoint(leftGutter, yProjectsMid, 25);
+      addWaypoint(leftGutter, yProjectsBottom, 25);
+      addWaypoint(leftGutter, yExpTop, 25);
+      addWaypoint(leftGutter, yAnalyticsTop, 25);
+      addWaypoint(leftGutter, yAnalyticsBottom, 25);
+      addWaypoint((leftGutter + stopX) * 0.5, yAnalyticsBottom + (stopY - yAnalyticsBottom) * 0.5, 25);
+      addWaypoint(stopX - 60, stopY - 8, 20);
+      addWaypoint(stopX - 20, stopY - 1, 5);
+      addWaypoint(stopX, stopY, 1);
+    } else {
+      // On desktop / tablet:
+      // 1. Cross through empty vertical gap between Hero and Projects
+      addWaypoint(mid, yHeroBottom + (yProjectsTop - yHeroBottom) * 0.5, 25);
+      // 2. Run down the right gutter alongside Projects cards
+      addWaypoint(rightGutter, yProjectsTop, 25);
+      addWaypoint(rightGutter, yProjectsMid, 25);
+      // 3. Cross through empty vertical gap between Projects and Experience
+      addWaypoint(mid, yProjectsBottom + (yExpTop - yProjectsBottom) * 0.5, 25);
+      // 4. Run down the left gutter alongside Experience & Analytics
+      addWaypoint(leftGutter, yExpTop, 25);
+      addWaypoint(leftGutter, yAnalyticsTop, 25);
+      // 5. Approach arrival terminal and align horizontally into Get in Touch button
+      addWaypoint((leftGutter + stopX) * 0.5, yAnalyticsBottom + (stopY - yAnalyticsBottom) * 0.5, 25);
+      addWaypoint(stopX - 70, stopY - 10, 20);
+      addWaypoint(stopX - 25, stopY - 1, 5);
+      addWaypoint(stopX, stopY, 1);
+    }
+
+    const pathD = catmullRomToBezier(waypoints, 0.4);
 
     if (trackSleepersRef.current) trackSleepersRef.current.setAttribute("d", pathD);
     if (trackRailsRef.current) trackRailsRef.current.setAttribute("d", pathD);
@@ -227,8 +302,15 @@ export function App() {
       updateTrainOnScroll();
     };
 
+    let ticking = false;
     const handleScroll = () => {
-      updateTrainOnScroll();
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateTrainOnScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("resize", handleResize);
@@ -413,7 +495,7 @@ export function App() {
       </svg>
 
       {/* Main Content Layout Container */}
-      <div className="relative z-10 max-w-2xl mx-auto px-6 py-8 space-y-16 sm:space-y-20">
+      <div id="main-content-column" className="relative z-10 max-w-2xl mx-auto px-6 py-8 space-y-16 sm:space-y-20">
         <Navbar onOpenResume={() => setIsResumeOpen(true)} />
         <Header />
         <Projects />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Send, CheckCircle2, Mail } from "lucide-react";
+import { X, Send, CheckCircle2 } from "lucide-react";
 
 export const ContactModal = ({ isOpen, onClose }) => {
   const [name, setName] = useState("");

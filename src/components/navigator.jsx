@@ -9,11 +9,6 @@ export const Navigator = ({ onOpenContact, onOpenResume }) => {
       <div className="relative z-20 max-w-xl mx-auto px-6 text-center space-y-10 mb-20">
         {/* TERMINAL DESTINATION: Get In Touch (Spotlighted by Locomotive Headlight at Track End) */}
         <div id="get-in-touch-terminal" className="space-y-4 pt-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-zinc-950 text-[11px] font-mono text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_white]" />
-            <span>TERMINAL STATION // ARRIVAL</span>
-          </div>
-
           <h3 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
             Let's Connect
           </h3>

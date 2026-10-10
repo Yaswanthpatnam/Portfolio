@@ -8,7 +8,7 @@ import Navigator from "./components/navigator";
 import ContactModal from "./components/addProjectModal";
 import { X, FileText, Settings } from "lucide-react";
 
-// C1-Continuous Monotonic Cubic Bezier Track Builder (Zero loops, zero kinks, zero text overlap)
+// Pure Continuous Sinusoidal S-Curve Track Builder (100% curved, zero straight lines, zero loops)
 function catmullRomToBezier(points) {
   if (points.length < 2) return "";
   let d = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
@@ -21,20 +21,20 @@ function catmullRomToBezier(points) {
 
     let cp1x, cp1y, cp2x, cp2y;
 
-    if (Math.abs(dx) < 2) {
-      // Pure vertical gutter segment: lock X strictly to the gutter so it never bows into cards
-      cp1x = p1.x;
-      cp1y = p1.y + dy * 0.33;
+    if (i === 0) {
+      // Smooth curved exit from depot into first left apex alongside Hero
+      cp1x = p1.x + dx * 0.35;
+      cp1y = p1.y + dy * 0.35;
       cp2x = p2.x;
-      cp2y = p1.y + dy * 0.67;
+      cp2y = p2.y - dy * 0.45;
     } else if (i === points.length - 2) {
-      // Final terminal curve: vertical tangent leaving left gutter -> horizontal (0 deg) tangent into terminal stop
+      // Final sweeping curve from left apex into horizontal (0 deg) terminal stop
       cp1x = p1.x;
       cp1y = p1.y + dy * 0.55;
       cp2x = p2.x - dx * 0.55;
       cp2y = p2.y;
     } else {
-      // Smooth S-curve crossover between gutters with C1 vertical tangent continuity at both ends
+      // Pure C1-continuous sinusoidal S-curve between alternating Left and Right apexes
       cp1x = p1.x;
       cp1y = p1.y + dy * 0.5;
       cp2x = p2.x;
@@ -76,7 +76,7 @@ export function App() {
   const dogSvgRef = useRef(null);
   const dogPosRef = useRef({ x: 80, y: 80, targetX: 140, targetY: 140, lastTouchTime: 0 });
 
-  // 1. Build Railway Track Waypoints — Left->Right->Left S-curves across section gaps on both Mobile & Desktop
+  // 1. Build 100% Curved Sinusoidal Railway Track Waypoints (Left <-> Right wave on Mobile & Desktop)
   const buildTrackArchitecture = useCallback(() => {
     const docHeight = document.documentElement.scrollHeight;
     const docWidth = window.innerWidth;
@@ -104,9 +104,9 @@ export function App() {
     const contentRight = contentBox ? contentBox.right : Math.min(docWidth, mid + 336);
 
     const isMobile = docWidth < 768;
-    // Outer margin rails on both Mobile (11px from edges) and Desktop (40px outside content column)
-    const leftGutter = isMobile ? 11 : Math.max(16, Math.round(contentLeft - 40));
-    const rightGutter = isMobile ? docWidth - 11 : Math.min(docWidth - 16, Math.round(contentRight + 40));
+    // Left and Right wave apexes on Mobile (12px from edges) and Desktop (44px outside content column)
+    const leftGutter = isMobile ? 12 : Math.max(18, Math.round(contentLeft - 44));
+    const rightGutter = isMobile ? docWidth - 12 : Math.min(docWidth - 18, Math.round(contentRight + 44));
 
     // Starting Point: Cylindrical Depot (#track-origin)
     const originBox = getDocBox(document.getElementById("track-origin"));
@@ -125,11 +125,11 @@ export function App() {
     const analyticsBox = getDocBox(document.getElementById("analytics"));
     const btnBox = getDocBox(document.getElementById("btn-get-in-touch"));
 
-    const yHeroTop = heroBox ? heroBox.top : startY + 55;
-    const yHeroBottom = heroBox ? heroBox.bottom : yHeroTop + 240;
+    const yHeroBottom = heroBox ? heroBox.bottom : startY + 290;
 
     const yProjectsTop = projectsBox ? projectsBox.top : yHeroBottom + 64;
     const yProjectsBottom = projectsBox ? projectsBox.bottom : yProjectsTop + 560;
+    const yProjectsMid = Math.round((yProjectsTop + yProjectsBottom) * 0.5);
 
     const yExpTop = expBox ? expBox.top : yProjectsBottom + 64;
     const yExpBottom = expBox ? expBox.bottom : yExpTop + 360;
@@ -139,6 +139,7 @@ export function App() {
 
     const yAnalyticsTop = analyticsBox ? analyticsBox.top : yGithubBottom + 48;
     const yAnalyticsBottom = analyticsBox ? analyticsBox.bottom : yAnalyticsTop + 360;
+    const yAnalyticsMid = Math.round((yAnalyticsTop + yAnalyticsBottom) * 0.5);
 
     const btnLeft = btnBox ? btnBox.left : Math.round(mid - 70);
     const btnCenterY = btnBox ? Math.round(btnBox.top + btnBox.height / 2) : docHeight - 280;
@@ -151,39 +152,34 @@ export function App() {
       endGroupRef.current.setAttribute("transform", `translate(${stopX}, ${stopY})`);
     }
 
-    // Construct strictly monotonic waypoints weaving Left -> Right -> Left -> Right -> Left -> Terminal
-    // Crossovers occur exclusively inside the empty vertical gaps between sections.
+    // Every single waypoint alternates Left <-> Right so the track is 100% continuously curved
+    // with zero straight vertical lines from start depot to terminal stop.
     const waypoints = [];
     let prevY = -Infinity;
-    const addWaypoint = (x, targetY, minDelta = 18) => {
+    const addWaypoint = (x, targetY, minDelta = 60) => {
       const y = Math.max(Math.round(targetY), prevY + minDelta);
       prevY = y;
       waypoints.push({ x: Math.round(x), y });
     };
 
-    // 0. Origin Depot -> Left Gutter alongside Hero
+    // 0. Origin Depot
     addWaypoint(startX, startY, 0);
-    addWaypoint(leftGutter, Math.min(yHeroTop + 12, startY + (isMobile ? 42 : 60)), 20);
-    addWaypoint(leftGutter, yHeroBottom, 24);
-
-    // 1. S-Curve (Left -> Right) across Hero/Projects gap -> Right Gutter alongside Projects
-    addWaypoint(rightGutter, yProjectsTop, 24);
-    addWaypoint(rightGutter, yProjectsBottom, 24);
-
-    // 2. S-Curve (Right -> Left) across Projects/Experience gap -> Left Gutter alongside Experience
-    addWaypoint(leftGutter, yExpTop, 24);
-    addWaypoint(leftGutter, yExpBottom, 24);
-
-    // 3. S-Curve (Left -> Right) across Experience/GitHub gap -> Right Gutter alongside GitHub Matrix
-    addWaypoint(rightGutter, yGithubTop, 24);
-    addWaypoint(rightGutter, yGithubBottom, 24);
-
-    // 4. S-Curve (Right -> Left) across GitHub/Analytics gap -> Left Gutter alongside Live Telemetry
-    addWaypoint(leftGutter, yAnalyticsTop, 24);
-    addWaypoint(leftGutter, yAnalyticsBottom, 24);
-
-    // 5. Final sweeping curve from Left Gutter into Horizontal Terminal Stop at Get in Touch button
-    addWaypoint(stopX, stopY, 30);
+    // 1. Curve out around left of Hero to Left Apex
+    addWaypoint(leftGutter, yHeroBottom, 80);
+    // 2. Sweep Left -> Right to Projects Mid Apex
+    addWaypoint(rightGutter, yProjectsMid, 120);
+    // 3. Sweep Right -> Left to Projects/Experience Gap Apex
+    addWaypoint(leftGutter, Math.round((yProjectsBottom + yExpTop) * 0.5), 120);
+    // 4. Sweep Left -> Right to Experience/GitHub Gap Apex
+    addWaypoint(rightGutter, Math.round((yExpBottom + yGithubTop) * 0.5), 120);
+    // 5. Sweep Right -> Left to GitHub/Analytics Gap Apex
+    addWaypoint(leftGutter, Math.round((yGithubBottom + yAnalyticsTop) * 0.5), 120);
+    // 6. Sweep Left -> Right to Analytics Mid Apex
+    addWaypoint(rightGutter, yAnalyticsMid, 100);
+    // 7. Sweep Right -> Left to Analytics Bottom Apex
+    addWaypoint(leftGutter, yAnalyticsBottom + 16, 100);
+    // 8. Final sweeping curve from Left Apex into Horizontal Terminal Stop at Get in Touch button
+    addWaypoint(stopX, stopY, 60);
 
     const pathD = catmullRomToBezier(waypoints);
 

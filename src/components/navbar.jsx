@@ -18,7 +18,7 @@ export const Navbar = ({ onOpenResume }) => {
         </div>
 
         <div>
-          <div className="font-script text-2xl text-white font-bold leading-none tracking-wide">
+          <div className="font-script text-xl sm:text-2xl text-white font-bold leading-none tracking-wide whitespace-nowrap">
             Yaswanth Babu
           </div>
           <div className="text-[11px] font-mono text-zinc-400 mt-1">
@@ -28,22 +28,22 @@ export const Navbar = ({ onOpenResume }) => {
       </div>
 
       {/* Nav items */}
-      <nav className="flex items-center gap-3 sm:gap-5 text-xs font-mono text-zinc-400">
-        <a href="#projects" className="hover:text-white transition-colors">
+      <nav className="flex items-center gap-2.5 sm:gap-5 text-[11px] sm:text-xs font-mono text-zinc-400 shrink-0">
+        <a href="#projects" className="hover:text-white transition-colors whitespace-nowrap">
           Projects
         </a>
-        <a href="#experience" className="hover:text-white transition-colors">
+        <a href="#experience" className="hover:text-white transition-colors whitespace-nowrap">
           Experience
         </a>
-        <a href="#analytics" className="hover:text-white transition-colors">
+        <a href="#analytics" className="hover:text-white transition-colors whitespace-nowrap">
           Analytics
         </a>
         <button
           onClick={onOpenResume}
-          className="px-3 py-1 rounded border border-white/40 text-white hover:bg-white hover:text-black transition-all text-xs font-mono font-medium flex items-center gap-1 cursor-pointer"
+          className="px-2.5 sm:px-3 py-1 rounded border border-white/40 text-white hover:bg-white hover:text-black transition-all text-[11px] sm:text-xs font-mono font-medium flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
         >
           <span>CV</span>
-          <ArrowUpRight className="w-3 h-3" />
+          <ArrowUpRight className="w-3 h-3 shrink-0" />
         </button>
       </nav>
     </header>

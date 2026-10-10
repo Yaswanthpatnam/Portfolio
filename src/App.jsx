@@ -8,29 +8,37 @@ import Navigator from "./components/navigator";
 import ContactModal from "./components/addProjectModal";
 import { X, FileText, Settings } from "lucide-react";
 
-// Monotonic Catmull-Rom to Cubic Bezier Curve Converter with zero loop/cusp guarantee
-function catmullRomToBezier(points, tension = 0.4) {
+// C1-Continuous Monotonic Cubic Bezier Track Builder (Zero loops, zero kinks, zero text overlap)
+function catmullRomToBezier(points) {
   if (points.length < 2) return "";
-  const t = tension;
   let d = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
 
   for (let i = 0; i < points.length - 1; i++) {
-    const p0 = i > 0 ? points[i - 1] : points[i];
     const p1 = points[i];
     const p2 = points[i + 1];
-    const p3 = i < points.length - 2 ? points[i + 2] : p2;
+    const dx = p2.x - p1.x;
+    const dy = Math.max(1, p2.y - p1.y);
 
-    let cp1x = p1.x + ((p2.x - p0.x) * t) / 3;
-    let cp1y = p1.y + ((p2.y - p0.y) * t) / 3;
+    let cp1x, cp1y, cp2x, cp2y;
 
-    let cp2x = p2.x - ((p3.x - p1.x) * t) / 3;
-    let cp2y = p2.y - ((p3.y - p1.y) * t) / 3;
-
-    // Strict monotonic Y clamping to mathematically guarantee zero loops, cusps, or reversals
-    const dy = p2.y - p1.y;
-    if (dy > 0) {
-      cp1y = Math.max(p1.y, Math.min(p1.y + dy * 0.85, cp1y));
-      cp2y = Math.max(cp1y, Math.min(p2.y, cp2y));
+    if (Math.abs(dx) < 2) {
+      // Pure vertical gutter segment: lock X strictly to the gutter so it never bows into cards
+      cp1x = p1.x;
+      cp1y = p1.y + dy * 0.33;
+      cp2x = p2.x;
+      cp2y = p1.y + dy * 0.67;
+    } else if (i === points.length - 2) {
+      // Final terminal curve: vertical tangent leaving left gutter -> horizontal (0 deg) tangent into terminal stop
+      cp1x = p1.x;
+      cp1y = p1.y + dy * 0.55;
+      cp2x = p2.x - dx * 0.55;
+      cp2y = p2.y;
+    } else {
+      // Smooth S-curve crossover between gutters with C1 vertical tangent continuity at both ends
+      cp1x = p1.x;
+      cp1y = p1.y + dy * 0.5;
+      cp2x = p2.x;
+      cp2y = p2.y - dy * 0.5;
     }
 
     d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
@@ -66,153 +74,118 @@ export function App() {
   // Pixel Dog DOM and animation refs
   const dogRef = useRef(null);
   const dogSvgRef = useRef(null);
-  const dogPosRef = useRef({ x: 80, y: 80, targetX: 140, targetY: 140 });
+  const dogPosRef = useRef({ x: 80, y: 80, targetX: 140, targetY: 140, lastTouchTime: 0 });
 
-  // 1. Build Railway Track Waypoints — strictly in margins & interstitial gaps, never obstructing text
+  // 1. Build Railway Track Waypoints — Left->Right->Left S-curves across section gaps on both Mobile & Desktop
   const buildTrackArchitecture = useCallback(() => {
     const docHeight = document.documentElement.scrollHeight;
     const docWidth = window.innerWidth;
     const mid = docWidth / 2;
+    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    // Helper: True document coordinates (immune to nested position:relative offsetParents)
+    const getDocBox = (el) => {
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return {
+        left: Math.round(r.left + scrollLeft),
+        right: Math.round(r.right + scrollLeft),
+        top: Math.round(r.top + scrollTop),
+        bottom: Math.round(r.bottom + scrollTop),
+        width: Math.round(r.width),
+        height: Math.round(r.height),
+      };
+    };
 
     // Measure the exact boundary of the centered content column
-    const contentEl = document.getElementById("main-content-column");
-    let contentLeft = Math.max(0, mid - 336);
-    let contentRight = Math.min(docWidth, mid + 336);
-
-    if (contentEl) {
-      const rect = contentEl.getBoundingClientRect();
-      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-      contentLeft = rect.left + scrollLeft;
-      contentRight = rect.right + scrollLeft;
-    }
+    const contentBox = getDocBox(document.getElementById("main-content-column"));
+    const contentLeft = contentBox ? contentBox.left : Math.max(0, mid - 336);
+    const contentRight = contentBox ? contentBox.right : Math.min(docWidth, mid + 336);
 
     const isMobile = docWidth < 768;
-    // Gutters placed comfortably in outer black margins outside the text column
-    const leftGutter = isMobile ? 16 : Math.max(16, Math.round(contentLeft - 44));
-    const rightGutter = isMobile ? 16 : Math.min(docWidth - 16, Math.round(contentRight + 44));
+    // Outer margin rails on both Mobile (11px from edges) and Desktop (40px outside content column)
+    const leftGutter = isMobile ? 11 : Math.max(16, Math.round(contentLeft - 40));
+    const rightGutter = isMobile ? docWidth - 11 : Math.min(docWidth - 16, Math.round(contentRight + 40));
 
     // Starting Point: Cylindrical Depot (#track-origin)
-    const originEl = document.getElementById("track-origin");
-    let startX = isMobile ? 24 : Math.round(contentLeft + 24);
-    let startY = 70;
-
-    if (originEl) {
-      const rect = originEl.getBoundingClientRect();
-      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      startX = Math.round(rect.left + scrollLeft + rect.width / 2);
-      startY = Math.round(rect.top + scrollTop + rect.height / 2);
-    }
+    const originBox = getDocBox(document.getElementById("track-origin"));
+    const startX = originBox ? Math.round(originBox.left + originBox.width / 2) : isMobile ? 24 : Math.round(contentLeft + 24);
+    const startY = originBox ? Math.round(originBox.top + originBox.height / 2) : 60;
 
     if (originGroupRef.current) {
       originGroupRef.current.setAttribute("transform", `translate(${startX}, ${startY})`);
     }
 
-    // Dynamic Section Anchor Waypoints
-    const heroEl = document.getElementById("hero-section");
-    const projectsEl = document.getElementById("projects");
-    const expEl = document.getElementById("experience");
-    const analyticsEl = document.getElementById("analytics");
-    const contactBtn = document.getElementById("btn-get-in-touch");
+    // Dynamic Section Bounding Boxes (True Document Y)
+    const heroBox = getDocBox(document.getElementById("hero-section"));
+    const projectsBox = getDocBox(document.getElementById("projects"));
+    const expBox = getDocBox(document.getElementById("experience"));
+    const githubBox = getDocBox(document.getElementById("github-activity"));
+    const analyticsBox = getDocBox(document.getElementById("analytics"));
+    const btnBox = getDocBox(document.getElementById("btn-get-in-touch"));
 
-    const yHeroBottom = heroEl
-      ? Math.round(heroEl.offsetTop + heroEl.offsetHeight)
-      : Math.round(startY + 280);
+    const yHeroTop = heroBox ? heroBox.top : startY + 55;
+    const yHeroBottom = heroBox ? heroBox.bottom : yHeroTop + 240;
 
-    const yProjectsTop = projectsEl
-      ? Math.round(projectsEl.offsetTop)
-      : Math.round(yHeroBottom + 80);
+    const yProjectsTop = projectsBox ? projectsBox.top : yHeroBottom + 64;
+    const yProjectsBottom = projectsBox ? projectsBox.bottom : yProjectsTop + 560;
 
-    const projectsHeight = projectsEl ? projectsEl.offsetHeight : 600;
-    const yProjectsMid = Math.round(yProjectsTop + projectsHeight * 0.5);
-    const yProjectsBottom = projectsEl
-      ? Math.round(projectsEl.offsetTop + projectsHeight)
-      : Math.round(yProjectsTop + projectsHeight);
+    const yExpTop = expBox ? expBox.top : yProjectsBottom + 64;
+    const yExpBottom = expBox ? expBox.bottom : yExpTop + 360;
 
-    const yExpTop = expEl
-      ? Math.round(expEl.offsetTop)
-      : Math.round(yProjectsBottom + 80);
+    const yGithubTop = githubBox ? githubBox.top : yExpBottom + 64;
+    const yGithubBottom = githubBox ? githubBox.bottom : yGithubTop + 280;
 
-    const expHeight = expEl ? expEl.offsetHeight : 400;
-    const yExpBottom = expEl
-      ? Math.round(expEl.offsetTop + expHeight)
-      : Math.round(yExpTop + expHeight);
+    const yAnalyticsTop = analyticsBox ? analyticsBox.top : yGithubBottom + 48;
+    const yAnalyticsBottom = analyticsBox ? analyticsBox.bottom : yAnalyticsTop + 360;
 
-    const yAnalyticsTop = analyticsEl
-      ? Math.round(analyticsEl.offsetTop)
-      : Math.round(yExpBottom + 80);
+    const btnLeft = btnBox ? btnBox.left : Math.round(mid - 70);
+    const btnCenterY = btnBox ? Math.round(btnBox.top + btnBox.height / 2) : docHeight - 280;
 
-    const analyticsHeight = analyticsEl ? analyticsEl.offsetHeight : 500;
-    const yAnalyticsBottom = analyticsEl
-      ? Math.round(analyticsEl.offsetTop + analyticsHeight)
-      : Math.round(yAnalyticsTop + analyticsHeight);
-
-    let btnX = mid;
-    let btnY = docHeight - 320;
-    if (contactBtn) {
-      const rect = contactBtn.getBoundingClientRect();
-      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      btnX = Math.round(rect.left + scrollLeft + rect.width / 2);
-      btnY = Math.round(rect.top + scrollTop + rect.height / 2);
-    }
-
-    // Terminal stop: to the left of the button, pointing straight horizontally at it
-    const stopX = Math.round(isMobile ? btnX - 85 : btnX - 110);
-    const stopY = Math.round(btnY);
+    // Terminal stop positioned cleanly to the left of the "Get in Touch" button
+    const stopX = Math.max(leftGutter + 36, Math.round(btnLeft - (isMobile ? 22 : 36)));
+    const stopY = Math.round(btnCenterY);
 
     if (endGroupRef.current) {
       endGroupRef.current.setAttribute("transform", `translate(${stopX}, ${stopY})`);
     }
 
-    // Construct strictly monotonic waypoints ensuring the track stays in gutters
-    // and only crosses through empty vertical gaps between sections.
+    // Construct strictly monotonic waypoints weaving Left -> Right -> Left -> Right -> Left -> Terminal
+    // Crossovers occur exclusively inside the empty vertical gaps between sections.
     const waypoints = [];
     let prevY = -Infinity;
-    const addWaypoint = (x, targetY, minDelta = 20) => {
+    const addWaypoint = (x, targetY, minDelta = 18) => {
       const y = Math.max(Math.round(targetY), prevY + minDelta);
       prevY = y;
       waypoints.push({ x: Math.round(x), y });
     };
 
+    // 0. Origin Depot -> Left Gutter alongside Hero
     addWaypoint(startX, startY, 0);
-    // Smoothly exit depot into left outer margin before reaching hero text
-    addWaypoint(leftGutter, startY + (isMobile ? 50 : 70), 25);
-    // Run down the left gutter alongside hero text — 100% text clearance
-    addWaypoint(leftGutter, yHeroBottom, 25);
+    addWaypoint(leftGutter, Math.min(yHeroTop + 12, startY + (isMobile ? 42 : 60)), 20);
+    addWaypoint(leftGutter, yHeroBottom, 24);
 
-    if (isMobile) {
-      // On narrow mobile screens, stay reliably in the left padding margin
-      addWaypoint(leftGutter, yProjectsTop, 25);
-      addWaypoint(leftGutter, yProjectsMid, 25);
-      addWaypoint(leftGutter, yProjectsBottom, 25);
-      addWaypoint(leftGutter, yExpTop, 25);
-      addWaypoint(leftGutter, yAnalyticsTop, 25);
-      addWaypoint(leftGutter, yAnalyticsBottom, 25);
-      addWaypoint((leftGutter + stopX) * 0.5, yAnalyticsBottom + (stopY - yAnalyticsBottom) * 0.5, 25);
-      addWaypoint(stopX - 60, stopY - 8, 20);
-      addWaypoint(stopX - 20, stopY - 1, 5);
-      addWaypoint(stopX, stopY, 1);
-    } else {
-      // On desktop / tablet:
-      // 1. Cross through empty vertical gap between Hero and Projects
-      addWaypoint(mid, yHeroBottom + (yProjectsTop - yHeroBottom) * 0.5, 25);
-      // 2. Run down the right gutter alongside Projects cards
-      addWaypoint(rightGutter, yProjectsTop, 25);
-      addWaypoint(rightGutter, yProjectsMid, 25);
-      // 3. Cross through empty vertical gap between Projects and Experience
-      addWaypoint(mid, yProjectsBottom + (yExpTop - yProjectsBottom) * 0.5, 25);
-      // 4. Run down the left gutter alongside Experience & Analytics
-      addWaypoint(leftGutter, yExpTop, 25);
-      addWaypoint(leftGutter, yAnalyticsTop, 25);
-      // 5. Approach arrival terminal and align horizontally into Get in Touch button
-      addWaypoint((leftGutter + stopX) * 0.5, yAnalyticsBottom + (stopY - yAnalyticsBottom) * 0.5, 25);
-      addWaypoint(stopX - 70, stopY - 10, 20);
-      addWaypoint(stopX - 25, stopY - 1, 5);
-      addWaypoint(stopX, stopY, 1);
-    }
+    // 1. S-Curve (Left -> Right) across Hero/Projects gap -> Right Gutter alongside Projects
+    addWaypoint(rightGutter, yProjectsTop, 24);
+    addWaypoint(rightGutter, yProjectsBottom, 24);
 
-    const pathD = catmullRomToBezier(waypoints, 0.4);
+    // 2. S-Curve (Right -> Left) across Projects/Experience gap -> Left Gutter alongside Experience
+    addWaypoint(leftGutter, yExpTop, 24);
+    addWaypoint(leftGutter, yExpBottom, 24);
+
+    // 3. S-Curve (Left -> Right) across Experience/GitHub gap -> Right Gutter alongside GitHub Matrix
+    addWaypoint(rightGutter, yGithubTop, 24);
+    addWaypoint(rightGutter, yGithubBottom, 24);
+
+    // 4. S-Curve (Right -> Left) across GitHub/Analytics gap -> Left Gutter alongside Live Telemetry
+    addWaypoint(leftGutter, yAnalyticsTop, 24);
+    addWaypoint(leftGutter, yAnalyticsBottom, 24);
+
+    // 5. Final sweeping curve from Left Gutter into Horizontal Terminal Stop at Get in Touch button
+    addWaypoint(stopX, stopY, 30);
+
+    const pathD = catmullRomToBezier(waypoints);
 
     if (trackSleepersRef.current) trackSleepersRef.current.setAttribute("d", pathD);
     if (trackRailsRef.current) trackRailsRef.current.setAttribute("d", pathD);
@@ -293,9 +266,18 @@ export function App() {
 
     // Centered on the 38x20px locomotive (origin: 19px, 10px)
     trainRef.current.style.transform = `translate3d(${pt.x - 19}px, ${pt.y - 10}px, 0) rotate(${angle}deg)`;
+
+    // On mobile/touch devices, guide the companion dog alongside the locomotive during scroll
+    if (window.innerWidth < 768 && Date.now() - (dogPosRef.current.lastTouchTime || 0) > 1000) {
+      const viewY = Math.max(48, Math.min(vh - 56, pt.y - scrollTop - 24));
+      const offsetX = pt.x < window.innerWidth / 2 ? 22 : -42;
+      const viewX = Math.max(14, Math.min(window.innerWidth - 42, pt.x + offsetX));
+      dogPosRef.current.targetX = viewX;
+      dogPosRef.current.targetY = viewY;
+    }
   }, []);
 
-  // Set up listeners for Track & Train
+  // Set up listeners for Track & Train (including ResizeObserver for accordion/async layout changes)
   useEffect(() => {
     const handleResize = () => {
       buildTrackArchitecture();
@@ -316,6 +298,17 @@ export function App() {
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
+    // Observe content height changes (e.g., expanding project cards or async data loads)
+    let resizeObserver;
+    const contentEl = document.getElementById("main-content-column");
+    if (contentEl && typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        buildTrackArchitecture();
+        updateTrainOnScroll();
+      });
+      resizeObserver.observe(contentEl);
+    }
+
     // Initial setup with timeouts to ensure complete rendering
     buildTrackArchitecture();
     updateTrainOnScroll();
@@ -333,20 +326,36 @@ export function App() {
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
+      if (resizeObserver) resizeObserver.disconnect();
       clearTimeout(t1);
       clearTimeout(t2);
     };
   }, [buildTrackArchitecture, updateTrainOnScroll]);
 
-  // 3. Pixel Dog Companion Movement
+  // 3. Pixel Dog Companion Movement (Desktop Cursor + Mobile Touch/Drag & Scroll)
   useEffect(() => {
     let animId;
+    const clampTarget = (clientX, clientY) => {
+      const maxX = Math.max(32, window.innerWidth - 38);
+      const maxY = Math.max(32, window.innerHeight - 38);
+      dogPosRef.current.targetX = Math.max(8, Math.min(maxX, clientX + 12));
+      dogPosRef.current.targetY = Math.max(8, Math.min(maxY, clientY + 12));
+    };
+
     const handleMouseMove = (e) => {
-      dogPosRef.current.targetX = e.clientX + 16;
-      dogPosRef.current.targetY = e.clientY + 16;
+      clampTarget(e.clientX, e.clientY);
+    };
+
+    const handleTouch = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        dogPosRef.current.lastTouchTime = Date.now();
+        clampTarget(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchstart", handleTouch, { passive: true });
+    window.addEventListener("touchmove", handleTouch, { passive: true });
 
     const animateDog = () => {
       const { targetX, targetY } = dogPosRef.current;
@@ -356,14 +365,14 @@ export function App() {
       const dy = targetY - y;
       const dist = Math.hypot(dx, dy);
 
-      if (dist > 22) {
-        const speed = Math.min(dist * 0.13, 11);
+      if (dist > 18) {
+        const speed = Math.min(dist * 0.14, 11);
         x += (dx / dist) * speed;
         y += (dy / dist) * speed;
         dogPosRef.current.x = x;
         dogPosRef.current.y = y;
 
-        if (dogSvgRef.current) {
+        if (dogSvgRef.current && Math.abs(dx) > 1.5) {
           dogSvgRef.current.style.transform = dx < 0 ? "scaleX(-1)" : "scaleX(1)";
         }
       }
@@ -379,6 +388,8 @@ export function App() {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchstart", handleTouch);
+      window.removeEventListener("touchmove", handleTouch);
       cancelAnimationFrame(animId);
     };
   }, []);

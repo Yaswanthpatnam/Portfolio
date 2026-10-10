@@ -340,17 +340,17 @@ export const Skills = () => {
   return (
     <div className="relative z-10 space-y-12">
       {/* SECTION: REAL Monochromatic GitHub Activity Matrix */}
-      <section className="space-y-4 pt-2">
-        <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+      <section id="github-activity" className="space-y-4 pt-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-2">
           <div className="flex items-center gap-2 font-mono text-xs text-zinc-400">
-            <span className="text-zinc-500 font-semibold">Fig. 1.</span>
+            <span className="text-zinc-500 font-semibold whitespace-nowrap shrink-0">Fig. 1.</span>
             <span>{githubStats.totalAll} verified GitHub contributions</span>
           </div>
           <a
             href="https://github.com/Yaswanthpatnam"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] font-mono text-zinc-400 hover:text-white transition-colors"
+            className="text-[11px] font-mono text-zinc-400 hover:text-white transition-colors whitespace-nowrap shrink-0"
           >
             github.com/Yaswanthpatnam ↗
           </a>
@@ -530,30 +530,30 @@ export const Skills = () => {
 
       {/* SECTION: Telemetry & Traffic Insights */}
       <section id="analytics" className="space-y-4">
-        <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
-          <div className="flex items-center gap-2 font-mono text-xs text-zinc-400">
-            <span className="text-zinc-500 font-semibold">Fig. 2.</span>
-            <span>Live telemetry & reader volume</span>
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-2">
+          <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-400">
+            <span className="text-zinc-500 font-semibold whitespace-nowrap shrink-0">Fig. 2.</span>
+            <span className="whitespace-nowrap">Live telemetry & reader volume</span>
             {telemetryStatus === "live" ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399]" />
-                Live Redis
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] whitespace-nowrap shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399] shrink-0" />
+                <span>Live Redis</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 text-zinc-400 border border-white/10 text-[10px]">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
-                Live Telemetry
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/5 text-zinc-400 border border-white/10 text-[10px] whitespace-nowrap shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 shrink-0" />
+                <span>Live Telemetry</span>
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-1 font-mono text-xs">
+          <div className="flex items-center gap-1 font-mono text-xs shrink-0">
             {["24H", "7D", "30D"].map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setRange(tab)}
-                className={`px-2.5 py-1 rounded font-medium transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded font-medium transition-colors cursor-pointer whitespace-nowrap ${
                   range === tab
                     ? "text-black bg-white"
                     : "text-zinc-400 hover:text-white"

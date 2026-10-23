@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { playCardDealSound, isSoundEnabled, setSoundEnabled } from "../utils/cardSound";
 import { Volume2, VolumeX, Share2, Plus, ChevronLeft, ChevronRight, Check } from "lucide-react";
 
@@ -14,11 +14,27 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
   const currentXRef = useRef(0);
   const topCardRef = useRef(null);
 
+  const total = Array.isArray(reviews) ? reviews.length : 0;
+
+  // Safeguard: Ensure currentIndex is always valid when reviews change
+  useEffect(() => {
+    if (currentIndex >= total && total > 0) {
+      setCurrentIndex(0);
+    }
+  }, [currentIndex, total]);
+
+  // Safeguard: Always ensure top card is visually reset whenever currentIndex changes
+  useEffect(() => {
+    if (topCardRef.current) {
+      topCardRef.current.style.transition = "none";
+      topCardRef.current.style.transform = "translate(0px, 0px) scale(1) rotate(0deg)";
+      topCardRef.current.style.opacity = "1";
+    }
+  }, [currentIndex]);
+
   if (!reviews || reviews.length === 0) {
     return null;
   }
-
-  const total = reviews.length;
 
   const showToast = (title, desc) => {
     setToastMessage({ title, desc });
@@ -28,16 +44,19 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
   };
 
   const dealNext = () => {
+    if (total <= 1) return;
     playCardDealSound();
     setCurrentIndex((prev) => (prev + 1) % total);
   };
 
   const dealPrev = () => {
+    if (total <= 1) return;
     playCardDealSound();
     setCurrentIndex((prev) => (prev - 1 + total) % total);
   };
 
   const jumpTo = (idx) => {
+    if (total <= 1 || idx === currentIndex) return;
     playCardDealSound();
     setCurrentIndex(idx % total);
   };
@@ -70,7 +89,9 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
     currentXRef.current = e.clientX;
     if (topCardRef.current) {
       topCardRef.current.style.transition = "none";
-      topCardRef.current.setPointerCapture(e.pointerId);
+      try {
+        topCardRef.current.setPointerCapture(e.pointerId);
+      } catch {}
     }
   };
 
@@ -85,33 +106,74 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
   const handlePointerUp = (e) => {
     if (!isDraggingRef.current || !topCardRef.current) return;
     isDraggingRef.current = false;
+
+    try {
+      if (topCardRef.current.hasPointerCapture(e.pointerId)) {
+        topCardRef.current.releasePointerCapture(e.pointerId);
+      }
+    } catch {}
+
     const deltaX = currentXRef.current - startXRef.current;
-    const threshold = 55;
+    const threshold = 50;
+
+    // IF ONLY 1 CARD IN DECK: Smoothly spring snap back! Never fly off screen.
+    if (total <= 1) {
+      playCardDealSound();
+      topCardRef.current.style.transition = "transform 360ms cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+      topCardRef.current.style.transform = "translate(0px, 0px) scale(1) rotate(0deg)";
+      topCardRef.current.style.opacity = "1";
+      return;
+    }
 
     if (deltaX > threshold) {
-      // Swiped Right -> Deal next
+      // Swiped Right -> Deal next card
       playCardDealSound();
       topCardRef.current.style.transition = "transform 220ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease";
-      topCardRef.current.style.transform = `translateX(450px) rotate(18deg)`;
+      topCardRef.current.style.transform = "translateX(460px) rotate(18deg)";
       topCardRef.current.style.opacity = "0";
+
       setTimeout(() => {
+        if (topCardRef.current) {
+          topCardRef.current.style.transition = "none";
+          topCardRef.current.style.transform = "translate(0px, 0px) scale(1) rotate(0deg)";
+          topCardRef.current.style.opacity = "1";
+        }
         setCurrentIndex((prev) => (prev + 1) % total);
-      }, 200);
+      }, 210);
     } else if (deltaX < -threshold) {
-      // Swiped Left -> Deal next
+      // Swiped Left -> Deal next card
       playCardDealSound();
       topCardRef.current.style.transition = "transform 220ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease";
-      topCardRef.current.style.transform = `translateX(-450px) rotate(-18deg)`;
+      topCardRef.current.style.transform = "translateX(-460px) rotate(-18deg)";
       topCardRef.current.style.opacity = "0";
+
       setTimeout(() => {
+        if (topCardRef.current) {
+          topCardRef.current.style.transition = "none";
+          topCardRef.current.style.transform = "translate(0px, 0px) scale(1) rotate(0deg)";
+          topCardRef.current.style.opacity = "1";
+        }
         setCurrentIndex((prev) => (prev + 1) % total);
-      }, 200);
+      }, 210);
     } else {
       // Snap back smoothly
       topCardRef.current.style.transition = "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)";
       topCardRef.current.style.transform = "translate(0px, 0px) scale(1) rotate(0deg)";
+      topCardRef.current.style.opacity = "1";
     }
   };
+
+  const handlePointerCancel = () => {
+    if (!isDraggingRef.current || !topCardRef.current) return;
+    isDraggingRef.current = false;
+    topCardRef.current.style.transition = "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)";
+    topCardRef.current.style.transform = "translate(0px, 0px) scale(1) rotate(0deg)";
+    topCardRef.current.style.opacity = "1";
+  };
+
+  // Prevent ghost duplicate cards: stack offsets adapt to exact item count
+  const stackOffsets = total === 1 ? [0] : total === 2 ? [1, 0] : [2, 1, 0];
+  const safeCurrentIndex = currentIndex < total ? currentIndex : 0;
 
   return (
     <section id="testimonials" className="relative z-10 space-y-3 pt-2 scroll-mt-6">
@@ -122,7 +184,7 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
           <h2 className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold flex items-center gap-2">
             <span>CLIENT TESTIMONIALS</span>
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 font-normal">
-              {currentIndex + 1}/{total}
+              {safeCurrentIndex + 1}/{total}
             </span>
           </h2>
         </div>
@@ -182,9 +244,9 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
           className="relative select-none"
           style={{ perspective: "1200px", height: "235px" }}
         >
-          {/* Render top 3 stacked cards with compact height */}
-          {[2, 1, 0].map((offset) => {
-            const itemIndex = (currentIndex + offset) % total;
+          {/* Render stack without duplicates */}
+          {stackOffsets.map((offset) => {
+            const itemIndex = (safeCurrentIndex + offset) % total;
             const item = reviews[itemIndex];
             if (!item) return null;
             const isTop = offset === 0;
@@ -199,14 +261,15 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
 
             return (
               <div
-                key={item.id || itemIndex}
+                key={`${item.id || itemIndex}-${offset}`}
                 ref={isTop ? topCardRef : null}
                 onPointerDown={isTop ? handlePointerDown : null}
                 onPointerMove={isTop ? handlePointerMove : null}
                 onPointerUp={isTop ? handlePointerUp : null}
-                onPointerCancel={isTop ? handlePointerUp : null}
-                className={`absolute inset-0 rounded-xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-xl backdrop-blur-xl transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none ${
-                  isTop ? "cursor-grab" : "pointer-events-none"
+                onPointerCancel={isTop ? handlePointerCancel : null}
+                onPointerLeave={isTop ? handlePointerCancel : null}
+                className={`absolute inset-0 rounded-xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-xl backdrop-blur-xl select-none ${
+                  isTop ? "cursor-grab active:cursor-grabbing" : "pointer-events-none"
                 }`}
                 style={{
                   background: "linear-gradient(180deg, rgba(20, 20, 24, 0.98) 0%, rgba(10, 10, 13, 0.99) 100%)",
@@ -215,6 +278,7 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
                   zIndex,
                   transformOrigin: "50% 120%",
                   willChange: "transform, opacity",
+                  touchAction: isTop ? "none" : "auto",
                 }}
               >
                 {/* Specular Top Edge */}
@@ -278,14 +342,17 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
         <div className="flex items-center justify-between pt-2.5 px-1 text-xs font-mono text-zinc-500">
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" />
-            <span className="text-[11px] text-zinc-400">Swipe card or deal next</span>
+            <span className="text-[11px] text-zinc-400">
+              {total > 1 ? "Swipe card or deal next" : "Client Recommendation"}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
+              disabled={total <= 1}
               onClick={dealPrev}
-              className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:text-white flex items-center justify-center transition-colors cursor-pointer active:scale-90"
+              className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:text-white flex items-center justify-center transition-colors cursor-pointer active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-zinc-800 disabled:hover:text-zinc-500"
               aria-label="Previous Testimonial Card"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
@@ -297,8 +364,12 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
                 <span
                   key={idx}
                   onClick={() => jumpTo(idx)}
-                  className={`h-1.5 rounded-full cursor-pointer transition-all ${
-                    idx === currentIndex ? "bg-white w-3.5" : "bg-zinc-700 hover:bg-zinc-500 w-1.5"
+                  className={`h-1.5 rounded-full transition-all ${
+                    total > 1 ? "cursor-pointer" : "cursor-default"
+                  } ${
+                    idx === safeCurrentIndex
+                      ? "bg-white w-3.5"
+                      : "bg-zinc-700 hover:bg-zinc-500 w-1.5"
                   }`}
                 />
               ))}
@@ -306,8 +377,9 @@ export const Testimonials = ({ reviews = [], onOpenFeedback }) => {
 
             <button
               type="button"
+              disabled={total <= 1}
               onClick={dealNext}
-              className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:text-white flex items-center justify-center transition-colors cursor-pointer active:scale-90"
+              className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:text-white flex items-center justify-center transition-colors cursor-pointer active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-zinc-800 disabled:hover:text-zinc-500"
               aria-label="Next Testimonial Card"
             >
               <ChevronRight className="w-3.5 h-3.5" />

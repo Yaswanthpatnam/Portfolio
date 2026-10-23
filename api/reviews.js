@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
   );
   res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.setHeader("Content-Type", "application/json");
 
   if (req.method === "OPTIONS") {
     res.status(200).end();

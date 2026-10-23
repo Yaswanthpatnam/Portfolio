@@ -31,6 +31,12 @@ async function main() {
     const subtitle = (await askQuestion("2. Tagline / Subtitle: ")).trim();
     const description = (await askQuestion("3. Detailed Description: ")).trim();
 
+    console.log("\nProject Type Options:");
+    console.log("  1) Personal Project");
+    console.log("  2) Freelance / Client Project");
+    const typeChoice = (await askQuestion("Select Project Type (1/2, default 1): ")).trim();
+    const type = typeChoice === "2" ? "freelance" : "personal";
+
     console.log("\nCategory Options:");
     console.log("  1) Full-Stack");
     console.log("  2) Frontend");
@@ -41,7 +47,7 @@ async function main() {
     let categoryLabel = "Full-Stack";
     if (categoryChoice === "2") {
       category = "frontend";
-      categoryLabel = "Frontend";
+      categoryLabel = type === "freelance" ? "Client & Frontend" : "Frontend";
     } else if (categoryChoice === "3") {
       category = "backend";
       categoryLabel = "Backend & API";
@@ -53,16 +59,24 @@ async function main() {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const github = (await askQuestion("5. GitHub URL: ")).trim();
-    const live = (await askQuestion("6. Live Demo URL (optional): ")).trim();
+    let github = "";
+    if (type !== "freelance") {
+      github = (await askQuestion("5. GitHub URL: ")).trim();
+    } else {
+      console.log("ℹ️ Freelance project selected: GitHub URL will be omitted for client privacy.");
+    }
 
-    const highlightsRaw = await askQuestion("7. Key Highlights (comma-separated, optional): ");
+    const live = (await askQuestion("6. Live Demo URL (optional): ")).trim();
+    const thumbnailInput = (await askQuestion("7. Thumbnail image filename in /public/projects (e.g. preview.png, optional): ")).trim();
+    const thumbnail = thumbnailInput ? `/projects/${thumbnailInput.replace(/^\/?projects\//, "")}` : "";
+
+    const highlightsRaw = await askQuestion("8. Key Highlights (comma-separated, optional): ");
     const highlights = highlightsRaw
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const isFeaturedInput = (await askQuestion("8. Mark as Featured project? (y/N): ")).trim().toLowerCase();
+    const isFeaturedInput = (await askQuestion("9. Mark as Featured project? (y/N): ")).trim().toLowerCase();
     const featured = isFeaturedInput === "y" || isFeaturedInput === "yes";
 
     const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -80,6 +94,8 @@ async function main() {
       github: github || "",
       live: live || "",
       featured,
+      type,
+      thumbnail: thumbnail || null,
       highlights,
     };
 

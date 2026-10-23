@@ -26,13 +26,13 @@ const experiencesData = [
   },
 ];
 
-export const Experiences = () => {
+export const Experiences = ({ sectionNumber = "[03]" }) => {
   return (
     <section id="experience" className="relative z-10 space-y-4 pt-2">
       {/* Section Header */}
       <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-xs text-zinc-500">[02]</span>
+          <span className="font-mono text-xs text-zinc-500">{sectionNumber}</span>
           <h2 className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold">
             WORK EXPERIENCE
           </h2>

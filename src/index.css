@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.font-editorial {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.015em;
+}
+
 :root {
   --bg: #000000;
   --bg-primary: #000000;

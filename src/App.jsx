@@ -2,8 +2,11 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import Navbar from "./components/navbar";
 import Header from "./components/header";
 import Projects from "./components/projects";
+import Testimonials from "./components/testimonials";
 import Experiences from "./components/experiences";
 import Skills from "./components/skills";
+import ReviewPortal from "./components/reviewPortal";
+import FeedbackModal from "./components/feedbackModal";
 import Navigator from "./components/navigator";
 import ContactModal from "./components/addProjectModal";
 import { X, FileText, Settings } from "lucide-react";
@@ -50,6 +53,97 @@ const DEFAULT_RESUME_URL =
   "https://drive.google.com/file/d/1DNXFfR2togGa4ipmtmrP7pifQ5FELnG1/view?usp=sharing";
 
 export function App() {
+  const [isReviewRoute, setIsReviewRoute] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return (
+      window.location.pathname === "/review" ||
+      window.location.pathname.startsWith("/review/") ||
+      window.location.search.includes("mode=review") ||
+      window.location.hash === "#review-portal"
+    );
+  });
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setIsReviewRoute(
+        window.location.pathname === "/review" ||
+        window.location.pathname.startsWith("/review/") ||
+        window.location.search.includes("mode=review") ||
+        window.location.hash === "#review-portal"
+      );
+    };
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.replace("#", "");
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 350);
+    }
+  }, [isReviewRoute]);
+
+  const [reviews, setReviews] = useState(() => {
+    try {
+      const cached = localStorage.getItem("portfolio_user_reviews");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {}
+    return [];
+  });
+
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const hasReviews = Boolean(reviews && reviews.length > 0);
+
+  // Sync with live Upstash database
+  useEffect(() => {
+    let isMounted = true;
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch("/api/reviews");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && Array.isArray(data.reviews) && isMounted) {
+          const localCached = (() => {
+            try {
+              return JSON.parse(localStorage.getItem("portfolio_user_reviews") || "[]");
+            } catch {
+              return [];
+            }
+          })();
+          const merged = [...data.reviews, ...localCached];
+          const unique = Array.from(new Map(merged.map((m) => [m.id, m])).values());
+          setReviews(unique);
+        }
+      } catch (err) {
+        console.warn("Live reviews fetch fallback:", err);
+      }
+    };
+    fetchReviews();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleNewReview = (newReview) => {
+    setReviews((prev) => [newReview, ...prev]);
+    setTimeout(() => {
+      const el = document.getElementById("testimonials");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 250);
+  };
+
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [resumeUrl, setResumeUrl] = useState(() => {
@@ -120,6 +214,7 @@ export function App() {
     // Dynamic Section Bounding Boxes (True Document Y)
     const heroBox = getDocBox(document.getElementById("hero-section"));
     const projectsBox = getDocBox(document.getElementById("projects"));
+    const testimonialsBox = getDocBox(document.getElementById("testimonials"));
     const expBox = getDocBox(document.getElementById("experience"));
     const githubBox = getDocBox(document.getElementById("github-activity"));
     const analyticsBox = getDocBox(document.getElementById("analytics"));
@@ -131,7 +226,11 @@ export function App() {
     const yProjectsBottom = projectsBox ? projectsBox.bottom : yProjectsTop + 560;
     const yProjectsMid = Math.round((yProjectsTop + yProjectsBottom) * 0.5);
 
-    const yExpTop = expBox ? expBox.top : yProjectsBottom + 64;
+    const yTestimonialsTop = testimonialsBox ? testimonialsBox.top : yProjectsBottom + 64;
+    const yTestimonialsBottom = testimonialsBox ? testimonialsBox.bottom : yTestimonialsTop + 320;
+    const yTestimonialsMid = Math.round((yTestimonialsTop + yTestimonialsBottom) * 0.5);
+
+    const yExpTop = expBox ? expBox.top : yTestimonialsBottom + 64;
     const yExpBottom = expBox ? expBox.bottom : yExpTop + 360;
 
     const yGithubTop = githubBox ? githubBox.top : yExpBottom + 64;
@@ -168,17 +267,28 @@ export function App() {
     addWaypoint(leftGutter, yHeroBottom, 80);
     // 2. Sweep Left -> Right to Projects Mid Apex
     addWaypoint(rightGutter, yProjectsMid, 120);
-    // 3. Sweep Right -> Left to Projects/Experience Gap Apex
-    addWaypoint(leftGutter, Math.round((yProjectsBottom + yExpTop) * 0.5), 120);
-    // 4. Sweep Left -> Right to Experience/GitHub Gap Apex
+
+    if (testimonialsBox) {
+      // 3. Sweep Right -> Left to Projects/Testimonials Gap Apex
+      addWaypoint(leftGutter, Math.round((yProjectsBottom + yTestimonialsTop) * 0.5), 120);
+      // 4. Sweep Left -> Right to Testimonials Mid Apex
+      addWaypoint(rightGutter, yTestimonialsMid, 120);
+      // 5. Sweep Right -> Left to Testimonials/Experience Gap Apex
+      addWaypoint(leftGutter, Math.round((yTestimonialsBottom + yExpTop) * 0.5), 120);
+    } else {
+      // Direct sweep Right -> Left to Projects/Experience Gap Apex
+      addWaypoint(leftGutter, Math.round((yProjectsBottom + yExpTop) * 0.5), 120);
+    }
+
+    // 6. Sweep Left -> Right to Experience/GitHub Gap Apex
     addWaypoint(rightGutter, Math.round((yExpBottom + yGithubTop) * 0.5), 120);
-    // 5. Sweep Right -> Left to GitHub/Analytics Gap Apex
+    // 7. Sweep Right -> Left to GitHub/Analytics Gap Apex
     addWaypoint(leftGutter, Math.round((yGithubBottom + yAnalyticsTop) * 0.5), 120);
-    // 6. Sweep Left -> Right to Analytics Mid Apex
+    // 8. Sweep Left -> Right to Analytics Mid Apex
     addWaypoint(rightGutter, yAnalyticsMid, 100);
-    // 7. Sweep Right -> Left to Analytics Bottom Apex
+    // 9. Sweep Right -> Left to Analytics Bottom Apex
     addWaypoint(leftGutter, yAnalyticsBottom + 16, 100);
-    // 8. Final sweeping curve from Left Apex into Horizontal Terminal Stop at Get in Touch button
+    // 10. Final sweeping curve from Left Apex into Horizontal Terminal Stop at Get in Touch button
     addWaypoint(stopX, stopY, 60);
 
     const pathD = catmullRomToBezier(waypoints);
@@ -390,6 +500,10 @@ export function App() {
     };
   }, []);
 
+  if (isReviewRoute) {
+    return <ReviewPortal />;
+  }
+
   return (
     <main className="relative min-h-screen bg-black text-[#e4e4e7] overflow-x-hidden selection:bg-white selection:text-black">
       {/* Interactive Desktop Pixel Dog Companion */}
@@ -503,10 +617,20 @@ export function App() {
 
       {/* Main Content Layout Container */}
       <div id="main-content-column" className="relative z-10 max-w-2xl mx-auto px-6 py-8 space-y-16 sm:space-y-20">
-        <Navbar onOpenResume={() => setIsResumeOpen(true)} />
+        <Navbar
+          onOpenResume={() => setIsResumeOpen(true)}
+          onOpenFeedback={() => setIsFeedbackOpen(true)}
+          hasReviews={hasReviews}
+        />
         <Header />
         <Projects />
-        <Experiences />
+        {hasReviews && (
+          <Testimonials
+            reviews={reviews}
+            onOpenFeedback={() => setIsFeedbackOpen(true)}
+          />
+        )}
+        <Experiences sectionNumber={hasReviews ? "[03]" : "[02]"} />
         <Skills />
         <Navigator
           onOpenContact={() => setIsContactOpen(true)}
@@ -518,6 +642,13 @@ export function App() {
       <ContactModal
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
+      />
+
+      {/* Feedback Modal (Mounted via Portal onto document.body with z-[100]) */}
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+        onSuccess={handleNewReview}
       />
 
       {/* Resume Modal */}

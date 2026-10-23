@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
 
-export const Navbar = ({ onOpenResume }) => {
+export const Navbar = ({ onOpenResume, onOpenFeedback, hasReviews = true }) => {
   return (
     <header className="relative z-20 flex items-center justify-between border-b border-zinc-800/80 pb-5 pt-2">
       <div className="flex items-center gap-3">
@@ -28,10 +28,15 @@ export const Navbar = ({ onOpenResume }) => {
       </div>
 
       {/* Nav items */}
-      <nav className="flex items-center gap-2.5 sm:gap-5 text-[11px] sm:text-xs font-mono text-zinc-400 shrink-0">
+      <nav className="flex items-center gap-2 sm:gap-4 text-[11px] sm:text-xs font-mono text-zinc-400 shrink-0">
         <a href="#projects" className="hover:text-white transition-colors whitespace-nowrap">
           Projects
         </a>
+        {hasReviews && (
+          <a href="#testimonials" className="hover:text-white transition-colors whitespace-nowrap">
+            Reviews
+          </a>
+        )}
         <a href="#experience" className="hover:text-white transition-colors whitespace-nowrap">
           Experience
         </a>
@@ -39,6 +44,15 @@ export const Navbar = ({ onOpenResume }) => {
           Analytics
         </a>
         <button
+          type="button"
+          onClick={onOpenFeedback}
+          className="px-2 sm:px-2.5 py-1 rounded border border-white/20 bg-white/5 text-zinc-200 hover:bg-white hover:text-black transition-all text-[11px] sm:text-xs font-mono font-medium flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+          title="Provide client feedback"
+        >
+          <span>Feedback</span>
+        </button>
+        <button
+          type="button"
           onClick={onOpenResume}
           className="px-2.5 sm:px-3 py-1 rounded border border-white/40 text-white hover:bg-white hover:text-black transition-all text-[11px] sm:text-xs font-mono font-medium flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
         >

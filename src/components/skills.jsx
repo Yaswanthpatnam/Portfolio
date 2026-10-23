@@ -384,9 +384,9 @@ export const Skills = () => {
               </div>
             )}
 
-            <div className="text-zinc-300 flex items-center gap-1.5">
+            <div className="text-zinc-300 flex items-center gap-1.5 font-mono text-[11px]">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
               <span>{githubStats.streak}-day active streak</span>
-              <span>🔥</span>
             </div>
           </div>
 

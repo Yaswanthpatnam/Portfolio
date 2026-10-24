@@ -53,30 +53,33 @@ const DEFAULT_RESUME_URL =
   "https://drive.google.com/file/d/1DNXFfR2togGa4ipmtmrP7pifQ5FELnG1/view?usp=sharing";
 
 export function App() {
-  const [isReviewRoute, setIsReviewRoute] = useState(() => {
+  const checkIsReviewRoute = () => {
     if (typeof window === "undefined") return false;
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    const search = window.location.search.toLowerCase();
     return (
-      window.location.pathname === "/review" ||
-      window.location.pathname.startsWith("/review/") ||
-      window.location.search.includes("mode=review") ||
-      window.location.hash === "#review-portal"
+      path === "/review" ||
+      path.startsWith("/review/") ||
+      search.includes("mode=review") ||
+      hash === "#review" ||
+      hash === "#reviews" ||
+      hash === "#feedback" ||
+      hash === "#review-portal"
     );
-  });
+  };
+
+  const [isReviewRoute, setIsReviewRoute] = useState(checkIsReviewRoute);
 
   useEffect(() => {
-    const handlePopState = () => {
-      setIsReviewRoute(
-        window.location.pathname === "/review" ||
-        window.location.pathname.startsWith("/review/") ||
-        window.location.search.includes("mode=review") ||
-        window.location.hash === "#review-portal"
-      );
+    const handleRouteCheck = () => {
+      setIsReviewRoute(checkIsReviewRoute());
     };
-    window.addEventListener("popstate", handlePopState);
-    window.addEventListener("hashchange", handlePopState);
+    window.addEventListener("popstate", handleRouteCheck);
+    window.addEventListener("hashchange", handleRouteCheck);
     return () => {
-      window.removeEventListener("popstate", handlePopState);
-      window.removeEventListener("hashchange", handlePopState);
+      window.removeEventListener("popstate", handleRouteCheck);
+      window.removeEventListener("hashchange", handleRouteCheck);
     };
   }, []);
 
@@ -501,7 +504,14 @@ export function App() {
   }, []);
 
   if (isReviewRoute) {
-    return <ReviewPortal />;
+    return (
+      <ReviewPortal
+        onBack={() => {
+          window.history.pushState({}, "", "/");
+          setIsReviewRoute(false);
+        }}
+      />
+    );
   }
 
   return (
@@ -619,7 +629,10 @@ export function App() {
       <div id="main-content-column" className="relative z-10 max-w-2xl mx-auto px-6 py-8 space-y-16 sm:space-y-20">
         <Navbar
           onOpenResume={() => setIsResumeOpen(true)}
-          onOpenFeedback={() => setIsFeedbackOpen(true)}
+          onOpenFeedback={() => {
+            window.history.pushState({}, "", "/review");
+            setIsReviewRoute(true);
+          }}
           hasReviews={hasReviews}
         />
         <Header />

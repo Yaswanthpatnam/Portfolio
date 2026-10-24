@@ -43,14 +43,19 @@ export const Navbar = ({ onOpenResume, onOpenFeedback, hasReviews = true }) => {
         <a href="#analytics" className="hover:text-white transition-colors whitespace-nowrap">
           Analytics
         </a>
-        <button
-          type="button"
-          onClick={onOpenFeedback}
+        <a
+          href="/review"
+          onClick={(e) => {
+            if (onOpenFeedback) {
+              e.preventDefault();
+              onOpenFeedback();
+            }
+          }}
           className="px-2 sm:px-2.5 py-1 rounded border border-white/20 bg-white/5 text-zinc-200 hover:bg-white hover:text-black transition-all text-[11px] sm:text-xs font-mono font-medium flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
-          title="Provide client feedback"
+          title="Client review link & portal (/review)"
         >
           <span>Feedback</span>
-        </button>
+        </a>
         <button
           type="button"
           onClick={onOpenResume}

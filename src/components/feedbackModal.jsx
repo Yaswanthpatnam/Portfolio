@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { X, Link2, Copy, Check } from "lucide-react";
 import { playCardDealSound } from "../utils/cardSound";
 
 const ratingDescriptions = {
@@ -20,6 +20,15 @@ export const FeedbackModal = ({ isOpen, onClose, onSuccess }) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [formContent, setFormContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  const handleCopyClientLink = () => {
+    const url = typeof window !== "undefined" ? `${window.location.origin}/review` : "https://yaswanth-babu.vercel.app/review";
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    });
+  };
 
   // Lock body scroll completely when modal is open
   useEffect(() => {
@@ -134,6 +143,25 @@ export const FeedbackModal = ({ isOpen, onClose, onSuccess }) => {
           <p className="text-xs text-zinc-300 leading-relaxed font-sans">
             Thank you for collaborating with me! Your perspective and feedback mean a great deal. I truly value the trust we built, and I hope we stay closely connected for more impactful projects in the future.
           </p>
+        </div>
+
+        {/* Shareable Direct Client Link Bar */}
+        <div className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-mono">
+          <div className="flex items-center gap-2 text-zinc-400 min-w-0">
+            <Link2 className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+            <span className="text-[11px] text-zinc-300 shrink-0">Client URL:</span>
+            <span className="text-[11px] text-zinc-500 truncate">
+              {typeof window !== "undefined" ? `${window.location.origin}/review` : "https://yaswanth-babu.vercel.app/review"}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleCopyClientLink}
+            className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-750 text-white text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer shrink-0 ml-2"
+          >
+            {copiedLink ? <Check className="w-3 h-3 text-white" /> : <Copy className="w-3 h-3 text-zinc-400" />}
+            <span>{copiedLink ? "Copied!" : "Copy Link"}</span>
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3.5">

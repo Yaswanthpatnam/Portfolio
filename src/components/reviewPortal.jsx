@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, ArrowUpRight, Check, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check, Copy } from "lucide-react";
 import { playCardDealSound } from "../utils/cardSound";
 
 const ratingDescriptions = {
@@ -10,7 +10,7 @@ const ratingDescriptions = {
   1: "Poor",
 };
 
-export const ReviewPortal = () => {
+export const ReviewPortal = ({ onBack }) => {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [organization, setOrganization] = useState("");
@@ -20,6 +20,19 @@ export const ReviewPortal = () => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    const url = typeof window !== "undefined" ? `${window.location.origin}/review` : "https://yaswanth-babu.vercel.app/review";
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setToast({
+        title: "Client Link Copied",
+        desc: `Share this link with your client: ${url}`,
+      });
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
 
   const initials = name
     ? name
@@ -83,18 +96,36 @@ export const ReviewPortal = () => {
   return (
     <main className="min-h-screen bg-[#09090b] text-[#fafafa] p-4 sm:p-8 flex flex-col items-center justify-start">
       {/* Top Navigation */}
-      <div className="w-full max-w-4xl mb-6 flex items-center justify-between text-xs font-mono">
+      <div className="w-full max-w-4xl mb-6 flex items-center justify-between text-xs font-mono gap-3 flex-wrap">
         <a
           href="/"
-          className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors py-1.5 px-3 rounded-lg bg-zinc-900 border border-zinc-800"
+          onClick={(e) => {
+            if (onBack) {
+              e.preventDefault();
+              onBack();
+            }
+          }}
+          className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors py-1.5 px-3 rounded-lg bg-zinc-900 border border-zinc-800 cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Return to Portfolio</span>
         </a>
 
-        <div className="flex items-center gap-2 text-zinc-500 text-[11px]">
-          <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
-          <span>Direct Client Portal</span>
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={handleCopyLink}
+            className="inline-flex items-center gap-1.5 text-xs font-mono py-1.5 px-3 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white transition-colors cursor-pointer"
+            title="Copy shareable client review link"
+          >
+            {copied ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5 text-zinc-400" />}
+            <span>{copied ? "Link Copied!" : "Copy Client Link"}</span>
+          </button>
+
+          <div className="hidden sm:flex items-center gap-1.5 text-zinc-500 text-[11px]">
+            <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
+            <span>Direct Client Portal</span>
+          </div>
         </div>
       </div>
 

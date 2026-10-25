@@ -626,7 +626,7 @@ export function App() {
       </svg>
 
       {/* Main Content Layout Container */}
-      <div id="main-content-column" className="relative z-10 max-w-2xl mx-auto px-6 py-8 space-y-16 sm:space-y-20">
+      <div id="main-content-column" className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-14 sm:space-y-20">
         <Navbar
           onOpenResume={() => setIsResumeOpen(true)}
           onOpenFeedback={() => {
@@ -667,11 +667,11 @@ export function App() {
       {/* Resume Modal */}
       {isResumeOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md transition-opacity duration-200"
           onClick={() => setIsResumeOpen(false)}
         >
           <div
-            className="relative w-full max-w-lg rounded-2xl border border-zinc-800 bg-[#0c0c0e] p-6 shadow-2xl space-y-4"
+            className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-800 bg-[#0c0c0e] p-5 sm:p-6 shadow-2xl space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">

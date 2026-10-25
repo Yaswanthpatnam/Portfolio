@@ -27,8 +27,8 @@ export const Header = () => {
 
   return (
     <section id="hero-section" className="relative z-10 pt-4 sm:pt-6 space-y-4">
-      <h1 className="text-4xl sm:text-6xl text-white leading-tight font-light select-none">
-        <span className="font-script text-zinc-300 text-3xl sm:text-5xl mr-2">
+      <h1 className="text-3xl sm:text-5xl md:text-6xl text-white leading-tight font-light select-none">
+        <span className="font-script text-zinc-300 text-2xl sm:text-4xl md:text-5xl mr-2">
           I'm {current.article}
         </span>
         <span

@@ -30,7 +30,7 @@ export const Navigator = ({ onOpenContact, onOpenResume }) => {
         </div>
 
         {/* Social Accounts (Clean & Direct) */}
-        <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-zinc-400 border-t border-zinc-900/80 pt-8">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs font-mono text-zinc-400 border-t border-zinc-900/80 pt-8">
           <a
             href="https://github.com/Yaswanthpatnam"
             target="_blank"

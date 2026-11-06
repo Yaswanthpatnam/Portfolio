@@ -548,4 +548,33 @@ The script prepends the new project directly to `src/data/projects.json`, and it
 3. Redeploy on Vercel. The telemetry status badge in the portfolio will switch from "Live Telemetry" to glowing green **"Live Redis"**.
 
 ---
+
+## Chapter 14: Interactive 3D Card Deck Physics, Client Review Portal & Multi-Tier Responsive Architecture
+
+### 14.1 Card Deck Gesture Physics & Single-Card Spring Snapping
+The client review section (`src/components/testimonials.jsx`) implements an interactive physical card deck using the PointerEvents API (`pointerdown`, `pointermove`, `pointerup` with `setPointerCapture`):
+- **Dynamic Stack Depth**: When `total === 1`, exactly one card is mounted with zero ghost cards. When `total >= 2`, stack layers apply progressive $Y$-translation ($8\text{px} \times \text{offset}$), scale decay ($1 - 0.035 \times \text{offset}$), and opacity falloff ($1.0 \to 0.72 \to 0.42$).
+- **Single-Card Spring Snap**: When only a single review exists, drag gestures provide responsive resistance and spring-snap back to origin (`translate(0px, 0px) scale(1) rotate(0deg)`) using a custom cubic-bezier timing function (`cubic-bezier(0.16, 1, 0.3, 1)`), preventing single cards from being discarded off-screen.
+- **Dynamic Visibility & Section Renumbering**: When zero reviews exist in production or cache (`reviews.length === 0`), the entire Testimonials DOM node unmounts cleanly, and subsequent section indices dynamically adjust from `[03]` to `[02]`.
+
+### 14.2 Velvet Pink Noise Web Audio API Card Dealing Acoustics
+Rather than playing recorded audio files or harsh synthesized white noise, `src/utils/cardSound.js` synthesizes a velvet-soft card slide using the browser's native `AudioContext`:
+- **Pink Noise Filtration**: Generates a 55ms noise buffer attenuated with three running pole filters to eliminate harsh high-frequency treble.
+- **Dynamic Biquad Filter Glide**: Passes through a 12-pole lowpass filter sweeping from 320 Hz to 120 Hz with a flat $Q = 0.5$ (preventing metallic ringing).
+- **Subtle Acoustic Sine Body**: Blends a low-frequency sine micro-glide (130 Hz $\to$ 85 Hz) with a whisper gain ($0.035$) to recreate the physical resonance of cardboard sliding across a card deck.
+- **Global Sound Preference**: Stores sound preferences in `localStorage` (`portfolio_card_sound`) with accessible Lucide mute/unmute toggling.
+
+### 14.3 Dedicated Review Portal & Address Bar Route Synchronization
+The application features a dedicated, direct client feedback portal (`src/components/reviewPortal.jsx`):
+- **Universal Route Matching**: Intercepts `/review`, `?mode=review`, `#review`, and `#feedback` through HTML5 `pushState` and `popstate` listeners, allowing direct links to be shared with clients without requiring external router libraries.
+- **1-Click Shareable Link Copy**: The client testimonial bar and navbar provide instantaneous clipboard copying (`navigator.clipboard.writeText`) with toast feedback.
+- **Warm Client Onboarding**: Greets collaborating partners warmly, presents traditional star rating selectors with qualitative feedback descriptions (Poor $\to$ Satisfied), and auto-scrolls to the live testimonials viewport upon submission.
+
+### 14.4 Two-Tier Mobile Navigation Architecture
+To guarantee 100% responsiveness across diverse device viewports (from 320px foldables to ultrawide desktops):
+- **Mobile Split Header (`< md`)**: Decouples primary branding and primary conversion actions (`Feedback` + `CV`) into a top bar, with secondary in-page anchors (`Projects`, `Reviews`, `Experience`, `Analytics`) rendered in a clean horizontal sub-navigation row.
+- **Touch-Optimized Hit Targets**: Action buttons maintain minimum 36px touch heights with `active:scale-95` feedback and guaranteed zero overflow clipping.
+- **Scroll-Bounded Modal Drawers**: The Curriculum Vitae viewer enforces `max-h-[90vh]` with internal vertical scrolling so resume links remain accessible on small screens.
+
+---
 *End of The System Bible.*

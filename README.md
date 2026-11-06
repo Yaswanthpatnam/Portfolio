@@ -22,6 +22,10 @@ Features an interactive 2D railway spline engine, synchronized locomotive with v
 - **🚂 Monotonic Railway Spline Engine**: Custom Catmull-Rom to Cubic Bezier converter with strict $Y$-monotonic clamping ($y_1 \le cp_{1y} \le cp_{2y} \le y_2$) that mathematically guarantees zero loops, overshoots, or self-intersections.
 - **💡 Dual-Layer Volumetric Searchlight**: Hardware-accelerated conic gradient mask with dual-stage blur (14px + 24px) simulating Mie atmospheric scattering behind the moving locomotive.
 - **🐕 Desktop Companion Pixel Dog**: Smooth cursor tracking via vector Lerp (Linear Interpolation) with Euclidean damping and directional sprite flipping.
+- **🃏 3D Playing Card Testimonials Deck**: Interactive card deck with physics-based pointer tracking, spring-snap dynamics, Web Audio API mechanical card sound, and dynamic hide/show layout.
+- **📬 Dedicated Client Review Portal (`/review`)**: Dynamic URL routing, 1-click shareable review links, star rating selector, and live serverless Upstash Redis backend (`/api/reviews`).
+- **🗂️ Personal vs. Freelance Dual-Segment Filtering**: Sliding segmented pill control with 16:7 browser mockups and verified live deployment links (Jnana.AI, Smart Attendance System, Sree Keerthi Hospital, TripBill, etc.).
+- **📱 2-Tier Responsive Navigation**: Mobile-optimized header architecture with pinned CV and Feedback action controls and secondary horizontal category navigation.
 - **📊 53-Week GitHub Activity Matrix**: Accurate 365-day rolling calendar synced with live GitHub contributions, real-time active streak calculator, and interactive hover inspection.
 - **📡 Serverless Telemetry Pipeline**: Built-in `/api/analytics` endpoint backed by Upstash Redis with atomic pipelining, privacy-preserving SHA-256 visitor fingerprinting, and automatic time-series aggregation (24H, 7D, 30D).
 - **📂 Dynamic GitHub Project Ingestion**: Auto-syncs public repositories tagged `#portfolio`, deduplicates against local projects, and defends against rate-limits with session caching.

@@ -6,25 +6,15 @@ export const Navbar = ({ onOpenResume, onOpenFeedback, hasReviews = true }) => {
     <header className="relative z-20 border-b border-zinc-800/80 pb-4 sm:pb-5 pt-2">
       {/* Top Primary Bar */}
       <div className="flex items-center justify-between gap-3">
-        {/* Cylindrical Starting Point Node / Terminal Origin for Railway Track & Train */}
+        {/* Brand / Identity */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <div
-            id="track-origin"
-            className="relative flex items-center justify-center w-6 h-6 flex-shrink-0 cursor-default"
-            title="Railway Line Origin Terminal"
-          >
-            <span className="absolute w-8 h-8 rounded-full bg-white/15 animate-ping opacity-25 pointer-events-none" />
-            <div className="w-5 h-5 rounded-full border border-zinc-500 bg-zinc-950 flex items-center justify-center shadow-[0_0_12px_rgba(255,255,255,0.4)]">
-              <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.95)]" />
-            </div>
-          </div>
-
           <div>
             <div className="font-script text-xl sm:text-2xl text-white font-bold leading-none tracking-wide whitespace-nowrap">
               Yaswanth Babu
             </div>
-            <div className="text-[10px] sm:text-[11px] font-mono text-zinc-400 mt-1">
-              Bangalore
+            <div className="text-[10px] sm:text-[11px] font-mono text-zinc-400 mt-1 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/90 animate-pulse" />
+              <span>Bangalore</span>
             </div>
           </div>
         </div>

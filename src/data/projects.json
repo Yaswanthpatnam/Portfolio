@@ -50,15 +50,24 @@
   {
     "id": "hirelogixai",
     "title": "HireLogiX.AI",
-    "subtitle": "Gmail-Powered Job Search Tracking & AI Insights",
-    "description": "Converts Gmail hiring emails into a structured visual dashboard using Google Gemini to extract application stages, companies, and timelines.",
+    "subtitle": "Autonomous Privacy-First Career Intelligence Platform",
+    "description": "Autonomous, privacy-first career platform converting Gmail recruiter threads into real-time pipeline analytics. Powered by a <0.05ms regex privacy gatekeeper, 96.8% token-saving Pipe DSL, Groq LPU (Qwen 27B) + Ollama cascade, and sub-second Gmail delta sync.",
     "category": "fullstack",
     "categoryLabel": "Full-Stack & AI",
-    "stack": ["React.js", "Django REST", "Gemini API", "PostgreSQL"],
+    "stack": [
+      "React 19",
+      "Django REST",
+      "Groq LPU (Qwen 27B)",
+      "Ollama",
+      "Neon PostgreSQL",
+      "Gmail History API",
+      "Tailwind CSS"
+    ],
     "status": "Live",
     "statusColor": "#83CE7E",
     "github": "https://github.com/Yaswanthpatnam/hirelogix/tree/hirelogix-v2",
-    "live": "https://hirelogix-ai.vercel.app/",
+    "live": "",
+    "demoVideo": "https://drive.google.com/file/d/1duS8UImMxTzF_pKAL60cGTmae_M4uZ_c/view?usp=drive_link",
     "featured": true,
     "type": "personal",
     "thumbnail": "/projects/hirelogix.ai.png"

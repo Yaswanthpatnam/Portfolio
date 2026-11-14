@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 **A high-precision, monochromatic developer portfolio engineered with React 18, Vite, and serverless telemetry.**  
-Features an interactive 2D railway spline engine, synchronized locomotive with volumetric headlights, dynamic GitHub repository discovery, 53-week activity heatmap, and live Upstash Redis telemetry.
+Features an interactive 3D playing card testimonial deck, dedicated client review portal, hover-interactive project showcase with smooth image zoom, 53-week GitHub activity heatmap, and live Upstash Redis telemetry.
 
 [🌐 View Live Portfolio](https://yaswanth-babu.vercel.app/) · [📖 Read The In-Depth Architecture Bible](./PORTFOLIO_INDETAIL.md)
 
@@ -19,12 +19,10 @@ Features an interactive 2D railway spline engine, synchronized locomotive with v
 
 ## ⚡ Core Engineering Highlights
 
-- **🚂 Monotonic Railway Spline Engine**: Custom Catmull-Rom to Cubic Bezier converter with strict $Y$-monotonic clamping ($y_1 \le cp_{1y} \le cp_{2y} \le y_2$) that mathematically guarantees zero loops, overshoots, or self-intersections.
-- **💡 Dual-Layer Volumetric Searchlight**: Hardware-accelerated conic gradient mask with dual-stage blur (14px + 24px) simulating Mie atmospheric scattering behind the moving locomotive.
-- **🐕 Desktop Companion Pixel Dog**: Smooth cursor tracking via vector Lerp (Linear Interpolation) with Euclidean damping and directional sprite flipping.
+- **🗂️ Interactive Project Discovery**: Seamless hover-triggered project accordion drawers with smooth thumbnail image zoom effects, personal vs. freelance segmented filtering, and 16:7 browser mockups.
+- **🎥 Integrated Project Demos**: Dedicated demo video streaming integration for AI projects (e.g. HireLogiX.AI) directly accessible from preview cards and action links.
 - **🃏 3D Playing Card Testimonials Deck**: Interactive card deck with physics-based pointer tracking, spring-snap dynamics, Web Audio API mechanical card sound, and dynamic hide/show layout.
 - **📬 Dedicated Client Review Portal (`/review`)**: Dynamic URL routing, 1-click shareable review links, star rating selector, and live serverless Upstash Redis backend (`/api/reviews`).
-- **🗂️ Personal vs. Freelance Dual-Segment Filtering**: Sliding segmented pill control with 16:7 browser mockups and verified live deployment links (Jnana.AI, Smart Attendance System, Sree Keerthi Hospital, TripBill, etc.).
 - **📱 2-Tier Responsive Navigation**: Mobile-optimized header architecture with pinned CV and Feedback action controls and secondary horizontal category navigation.
 - **📊 53-Week GitHub Activity Matrix**: Accurate 365-day rolling calendar synced with live GitHub contributions, real-time active streak calculator, and interactive hover inspection.
 - **📡 Serverless Telemetry Pipeline**: Built-in `/api/analytics` endpoint backed by Upstash Redis with atomic pipelining, privacy-preserving SHA-256 visitor fingerprinting, and automatic time-series aggregation (24H, 7D, 30D).

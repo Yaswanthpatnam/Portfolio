@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Play } from "lucide-react";
 import { GithubIcon } from "./icons";
 import localProjects from "../data/projects.json";
 
@@ -253,7 +253,6 @@ export const Projects = () => {
           displayedProjects.map((project, idx) => {
             const isExpanded = expandedId === project.id;
             const isFreelance = project.type === "freelance";
-            const displayYear = project.year || 2026;
             const domainPreview = project.live
               ? project.live.replace(/^https?:\/\//, "").replace(/\/$/, "")
               : project.title;
@@ -261,7 +260,12 @@ export const Projects = () => {
             return (
               <div
                 key={project.id || idx}
-                className="rounded-xl border border-[var(--border)] bg-[var(--card)] backdrop-blur-md hover:border-[var(--border-lit)] transition-all duration-200 overflow-hidden"
+                onMouseEnter={() => setExpandedId(project.id)}
+                className={`group/project rounded-xl border transition-all duration-300 overflow-hidden ${
+                  isExpanded
+                    ? "border-zinc-700 bg-zinc-950/90 shadow-xl"
+                    : "border-[var(--border)] bg-[var(--card)] hover:border-zinc-700 hover:bg-zinc-950/60"
+                }`}
               >
                 {/* Clickable Row Header */}
                 <button
@@ -286,14 +290,19 @@ export const Projects = () => {
                           GitHub Auto
                         </span>
                       )}
+                      {project.demoVideo && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-white border border-white/20 flex items-center gap-1">
+                          <Play className="w-2.5 h-2.5 fill-current" />
+                          <span>Video</span>
+                        </span>
+                      )}
                     </div>
                     <div className="text-xs text-zinc-400 mt-1 font-normal line-clamp-1">
                       {project.subtitle}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="text-xs font-mono text-zinc-500">{displayYear}</span>
+                  <div className="flex items-center flex-shrink-0 ml-2">
                     <ChevronDown
                       className={`w-4 h-4 text-white transition-transform duration-200 ${
                         isExpanded ? "rotate-180" : ""
@@ -312,10 +321,10 @@ export const Projects = () => {
                     <div className="p-4 sm:p-5 border-t border-[var(--border)] bg-black/95">
                       <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
                         
-                        {/* Left: Website Thumbnail Mockup - Exact 16:7 aspect ratio with top-left anchor */}
+                        {/* Left: Website Thumbnail Mockup - Exact 16:7 aspect ratio with smooth image zoom */}
                         <div className="md:col-span-6 w-full">
                           {project.thumbnail ? (
-                            <div className="group relative rounded-xl border border-zinc-800 bg-zinc-900/90 overflow-hidden shadow-lg transition-all duration-300 hover:border-zinc-700">
+                            <div className="group/mockup relative rounded-xl border border-zinc-800 bg-zinc-900/90 overflow-hidden shadow-lg transition-all duration-300 hover:border-zinc-700">
                               {/* Browser Header Bar */}
                               <div className="px-3 py-2 bg-zinc-950/90 border-b border-zinc-800/80 flex items-center justify-between text-[10px] font-mono text-zinc-500 select-none">
                                 <div className="flex items-center gap-1.5">
@@ -323,35 +332,58 @@ export const Projects = () => {
                                   <span className="w-2 h-2 rounded-full bg-amber-500/80" />
                                   <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
                                 </div>
-                                <span className="text-[9px] text-zinc-400 truncate max-w-[160px]">
+                                <span className="text-[9px] text-zinc-400 truncate max-w-[150px]">
                                   {domainPreview}
                                 </span>
-                                <span className="text-[9px] text-zinc-600">PREVIEW</span>
+                                {project.demoVideo ? (
+                                  <span className="text-[9px] font-mono text-white/90 bg-white/10 px-1.5 py-0.5 rounded border border-white/20 flex items-center gap-1">
+                                    <Play className="w-2.5 h-2.5 fill-current" />
+                                    <span>DEMO</span>
+                                  </span>
+                                ) : (
+                                  <span className="text-[9px] text-zinc-600">PREVIEW</span>
+                                )}
                               </div>
 
-                              {/* Exact 16:7 aspect ratio (1920x840) with object-left-top so brand logos are 100% visible */}
+                              {/* Exact 16:7 aspect ratio (1920x840) with smooth zoom effect */}
                               <div className="relative aspect-[16/7] overflow-hidden bg-zinc-950">
                                 <img
                                   src={project.thumbnail}
                                   alt={`${project.title} Preview`}
-                                  className="w-full h-full object-cover object-left-top transition-transform duration-300"
+                                  className={`w-full h-full object-cover object-left-top transition-transform duration-700 ease-out will-change-transform ${
+                                    isExpanded ? "scale-[1.05]" : "scale-100"
+                                  } group-hover/mockup:scale-110 group-hover/project:scale-[1.05]`}
                                   loading="lazy"
                                 />
 
-                                {/* Interactive Hover Overlay for Live Site */}
-                                {project.live && (
-                                  <a
-                                    href={project.live}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-[1px]"
-                                    aria-label={`Open live site for ${project.title}`}
-                                  >
-                                    <span className="px-3 py-1.5 rounded-full bg-white text-black font-mono text-xs font-semibold shadow-xl flex items-center gap-1.5">
-                                      <span>View Live Site</span>
-                                      <ArrowUpRight className="w-3.5 h-3.5" />
-                                    </span>
-                                  </a>
+                                {/* Interactive Hover Overlay for Live Site & Demo Video */}
+                                {(project.live || project.demoVideo) && (
+                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/mockup:opacity-100 transition-opacity duration-200 flex flex-wrap items-center justify-center gap-2 p-2 backdrop-blur-[2px]">
+                                    {project.live && (
+                                      <a
+                                        href={project.live}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-3 py-1.5 rounded-full bg-white text-black font-mono text-xs font-semibold shadow-xl flex items-center gap-1.5 hover:bg-zinc-200 transition-colors"
+                                        aria-label={`Open live site for ${project.title}`}
+                                      >
+                                        <span>Live Site</span>
+                                        <ArrowUpRight className="w-3.5 h-3.5" />
+                                      </a>
+                                    )}
+                                    {project.demoVideo && (
+                                      <a
+                                        href={project.demoVideo}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-600 text-white font-mono text-xs font-semibold shadow-xl flex items-center gap-1.5 hover:bg-zinc-800 transition-colors"
+                                        aria-label={`Watch demo video for ${project.title}`}
+                                      >
+                                        <Play className="w-3 h-3 fill-current text-white" />
+                                        <span>Watch Demo</span>
+                                      </a>
+                                    )}
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -370,13 +402,33 @@ export const Projects = () => {
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                                 <span>{project.status || "Live"}</span>
                               </span>
-                              <span className="text-xs font-mono text-zinc-500">•</span>
-                              <span className="text-xs font-mono text-zinc-400">{displayYear}</span>
+                              {project.categoryLabel && (
+                                <span className="text-[10px] font-mono text-zinc-400">
+                                  {project.categoryLabel}
+                                </span>
+                              )}
                             </div>
 
                             <p className="text-xs sm:text-[13px] text-zinc-300 leading-relaxed font-light">
                               {project.description}
                             </p>
+
+                            {/* System Architecture Highlights (if provided) */}
+                            {project.architecture && project.architecture.length > 0 && (
+                              <div className="pt-1 space-y-1.5">
+                                <span className="text-[10px] font-mono text-zinc-500 block uppercase tracking-wider">
+                                  System Architecture:
+                                </span>
+                                <div className="space-y-1 font-mono text-[11px] text-zinc-300">
+                                  {project.architecture.map((item, aIdx) => (
+                                    <div key={aIdx} className="flex items-start gap-1.5 leading-relaxed">
+                                      <span className="text-emerald-400 select-none font-bold">›</span>
+                                      <span className="text-zinc-300 font-light">{item}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
 
                             {/* Tech Stack Pills */}
                             {project.stack && project.stack.length > 0 && (
@@ -399,7 +451,7 @@ export const Projects = () => {
                           </div>
 
                           {/* Action Links */}
-                          <div className="flex flex-wrap items-center gap-4 text-xs font-mono pt-3 border-t border-zinc-900">
+                          <div className="flex flex-wrap items-center gap-3 text-xs font-mono pt-3 border-t border-zinc-900">
                             {project.live && (
                               <a
                                 href={project.live}
@@ -408,6 +460,19 @@ export const Projects = () => {
                                 className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 transition-colors flex items-center gap-1.5 font-semibold text-xs shadow-sm"
                               >
                                 <span>↗ Live Site</span>
+                              </a>
+                            )}
+
+                            {/* Demo Video Link */}
+                            {project.demoVideo && (
+                              <a
+                                href={project.demoVideo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-200 hover:text-white hover:border-zinc-500 hover:bg-zinc-800 transition-colors flex items-center gap-1.5 font-medium text-xs shadow-sm"
+                              >
+                                <Play className="w-3 h-3 fill-current text-white" />
+                                <span>Demo Video ↗</span>
                               </a>
                             )}
 

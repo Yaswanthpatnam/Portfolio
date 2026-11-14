@@ -3,12 +3,12 @@ import React from "react";
 export const Navigator = ({ onOpenContact, onOpenResume }) => {
   return (
     <footer
-      id="ocean-terminal"
+      id="contact"
       className="relative mt-20 pt-16 pb-24 overflow-hidden bg-black border-t border-zinc-900"
     >
       <div className="relative z-20 max-w-xl mx-auto px-6 text-center space-y-10 mb-20">
-        {/* TERMINAL DESTINATION: Get In Touch (Spotlighted by Locomotive Headlight at Track End) */}
-        <div id="get-in-touch-terminal" className="space-y-4 pt-4">
+        {/* Contact CTA */}
+        <div className="space-y-4 pt-4">
           <h3 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
             Let's Connect
           </h3>
